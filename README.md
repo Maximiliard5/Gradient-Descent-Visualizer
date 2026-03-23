@@ -3,7 +3,7 @@
 **An interactive, browser-based visualization tool for gradient descent and stochastic gradient descent.**  
 Built for *Tehnici de Optimizare — Laborator 2* (Optimization Techniques, Lab 2).
 
-🔗 **[Live Demo](https://github.com/Maximiliard5/Gradient-Descent-Visualizer/blob/main/GD_visualization.html)** ← replace with your GitHub Pages URL after setup
+🔗 **[Live Demo](https://maximiliard5.github.io/Gradient-Descent-Visualizer/GD_visualization.html)** ← replace with your GitHub Pages URL after setup
 
 ---
 
