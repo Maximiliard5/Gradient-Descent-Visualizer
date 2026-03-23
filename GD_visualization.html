@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gradient Descent Explorer — Interactive Lab Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0e13;
+    --surface: #151820;
+    --surface2: #1c2030;
+    --border: #2a2f40;
+    --text: #c8cdd8;
+    --text-dim: #6b7394;
+    --accent1: #00e5a0;
+    --accent2: #ff6b6b;
+    --accent3: #61afff;
+    --accent4: #ffd166;
+    --accent1-glow: rgba(0,229,160,0.25);
+    --accent2-glow: rgba(255,107,107,0.25);
+    --accent3-glow: rgba(97,175,255,0.25);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    min-height: 100vh; overflow-x: hidden;
+  }
+
+  .header {
+    padding: 20px 32px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .header h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px; font-weight: 700; color: var(--accent1);
+    letter-spacing: -0.5px;
+  }
+  .header .sub { font-size: 13px; color: var(--text-dim); font-style: italic; }
+
+  /* Formula banner */
+  .formula-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 32px;
+    display: flex; align-items: center; gap: 20px;
+    min-height: 44px;
+  }
+  .formula-bar .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 1px;
+    white-space: nowrap;
+  }
+  .formula-bar .formula {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; color: var(--accent4);
+    letter-spacing: 0.3px;
+  }
+  .formula-bar .props {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--text-dim);
+    display: flex; gap: 16px;
+  }
+  .formula-bar .props span { color: var(--accent3); }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 330px;
+    height: calc(100vh - 112px);
+  }
+
+  .canvas-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .canvas-panel {
+    position: relative; display: flex; flex-direction: column;
+    border-right: 1px solid var(--border);
+  }
+  .canvas-panel:last-child { border-right: none; }
+  .canvas-panel .panel-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--text-dim);
+    padding: 8px 14px 4px;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  canvas { width: 100%; flex: 1; cursor: crosshair; }
+  .click-hint {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: var(--text-dim); background: rgba(12,14,19,0.85);
+    padding: 3px 10px; border-radius: 4px; pointer-events: none;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    overflow-y: auto; padding: 16px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .ctrl-group {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px;
+  }
+  .ctrl-group h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--accent3);
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  /* Toggle row */
+  .toggle-row {
+    display: flex; gap: 4px;
+    background: var(--bg); border-radius: 6px; padding: 3px;
+  }
+  .toggle-btn {
+    flex: 1; padding: 6px 8px;
+    border: none; border-radius: 4px;
+    background: transparent; color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; cursor: pointer; transition: all 0.2s;
+  }
+  .toggle-btn.active {
+    background: var(--accent1); color: var(--bg); font-weight: 700;
+  }
+  .toggle-btn.active-sgd {
+    background: var(--accent2); color: var(--bg); font-weight: 700;
+  }
+
+  /* Function cards */
+  .fn-list { display: flex; flex-direction: column; gap: 4px; }
+  .fn-card {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px; padding: 7px 10px;
+    color: var(--text); cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; text-align: left;
+    transition: all 0.2s; line-height: 1.4;
+  }
+  .fn-card:hover { border-color: var(--accent4); color: var(--accent4); }
+  .fn-card.active {
+    background: rgba(255,209,102,0.08);
+    border-color: var(--accent4); color: var(--accent4);
+    box-shadow: 0 0 10px rgba(255,209,102,0.1);
+  }
+  .fn-card .fn-name { font-weight: 700; font-size: 10px; }
+  .fn-card .fn-expr { font-size: 10px; color: var(--text-dim); margin-top: 1px; }
+  .fn-card.active .fn-expr { color: rgba(255,209,102,0.7); }
+
+  /* Strategy buttons */
+  .strategy-btns { display: flex; flex-direction: column; gap: 4px; }
+  .strategy-btn {
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 10px;
+    color: var(--text); font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; cursor: pointer; text-align: left;
+    transition: all 0.2s;
+  }
+  .strategy-btn:hover { border-color: var(--accent1); color: var(--accent1); }
+  .strategy-btn.active {
+    background: rgba(0,229,160,0.08); border-color: var(--accent1);
+    color: var(--accent1); box-shadow: 0 0 10px var(--accent1-glow);
+  }
+
+  /* Sliders */
+  .slider-row { display: flex; flex-direction: column; gap: 3px; margin-top: 8px; }
+  .slider-row:first-of-type { margin-top: 0; }
+  .slider-row label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--text-dim);
+    display: flex; justify-content: space-between;
+  }
+  .slider-row label span { color: var(--accent4); }
+  input[type="range"] {
+    -webkit-appearance: none; width: 100%; height: 4px;
+    background: var(--border); border-radius: 2px; outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 12px; height: 12px;
+    background: var(--accent1); border-radius: 50%;
+    cursor: pointer; border: 2px solid var(--bg);
+  }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 6px; margin-top: 6px; }
+  .btn {
+    flex: 1; padding: 7px 8px;
+    border: 1px solid var(--border); border-radius: 6px;
+    background: transparent; color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; cursor: pointer; transition: all 0.2s;
+  }
+  .btn:hover { border-color: var(--accent1); color: var(--accent1); }
+  .btn.primary {
+    background: var(--accent1); color: var(--bg);
+    border-color: var(--accent1); font-weight: 700;
+  }
+  .btn.primary:hover { background: #00cc8e; }
+
+  /* Stats */
+  .stats {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; line-height: 1.9;
+  }
+  .stats .row { display: flex; justify-content: space-between; }
+  .stats .val { color: var(--accent4); }
+  .stats .lbl { color: var(--text-dim); }
+
+  /* Info */
+  .info-box {
+    background: var(--surface2);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 11px; font-size: 11px; line-height: 1.55; color: var(--text-dim);
+  }
+  .info-box strong { color: var(--text); }
+  .info-box code {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    background: rgba(0,229,160,0.1); color: var(--accent1);
+    padding: 1px 4px; border-radius: 3px;
+  }
+
+  .legend {
+    display: flex; flex-direction: column; gap: 3px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  .sgd-params { transition: all 0.2s; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>▸ Gradient Descent Explorer</h1>
+  <div class="sub">Tehnici de Optimizare — Laborator 2</div>
+</div>
+
+<div class="formula-bar">
+  <div class="label">Minimizing</div>
+  <div class="formula" id="formulaDisplay">f(x₁,x₂) = ½(κ·x₁² + x₂²)</div>
+  <div class="props">
+    <div>L = <span id="propL">—</span></div>
+    <div>σ = <span id="propSigma">—</span></div>
+    <div>κ = <span id="propKappa">—</span></div>
+    <div>x* = <span id="propXstar">—</span></div>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="canvas-area">
+    <div class="canvas-panel">
+      <div class="panel-label">Contour Plot + Iterates</div>
+      <canvas id="contourCanvas"></canvas>
+      <div class="click-hint">Click to set x⁰</div>
+    </div>
+    <div class="canvas-panel">
+      <div class="panel-label">Convergence: f(xᵏ) − f*</div>
+      <canvas id="convCanvas"></canvas>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <!-- Mode toggle -->
+    <div class="ctrl-group">
+      <h3>Method</h3>
+      <div class="toggle-row" id="modeToggle">
+        <button class="toggle-btn active" data-mode="gd">Gradient Descent</button>
+        <button class="toggle-btn" data-mode="sgd">Stochastic GD</button>
+      </div>
+    </div>
+
+    <!-- Function picker -->
+    <div class="ctrl-group">
+      <h3>Objective Function</h3>
+      <div class="fn-list" id="fnList"></div>
+    </div>
+
+    <!-- GD Strategy (only in GD mode) -->
+    <div class="ctrl-group" id="strategyGroup">
+      <h3>Step-Size Strategy</h3>
+      <div class="strategy-btns">
+        <button class="strategy-btn active" data-s="fixed">α = constant</button>
+        <button class="strategy-btn" data-s="exact">Exact line search</button>
+        <button class="strategy-btn" data-s="backtrack">Backtracking (Armijo)</button>
+      </div>
+    </div>
+
+    <!-- Parameters -->
+    <div class="ctrl-group">
+      <h3>Parameters</h3>
+      <div class="slider-row" id="alphaRow">
+        <label>Step size α <span id="alphaVal">0.010</span></label>
+        <input type="range" id="alphaSlider" min="0.0005" max="0.15" step="0.0005" value="0.01">
+      </div>
+      <div class="slider-row" id="cRow" style="display:none">
+        <label>Armijo c <span id="cVal">0.30</span></label>
+        <input type="range" id="cSlider" min="0.01" max="0.5" step="0.01" value="0.3">
+      </div>
+      <div class="slider-row" id="rhoRow" style="display:none">
+        <label>Armijo ρ <span id="rhoVal">0.50</span></label>
+        <input type="range" id="rhoSlider" min="0.1" max="0.95" step="0.05" value="0.5">
+      </div>
+
+      <!-- SGD-specific -->
+      <div class="sgd-params" id="sgdParams" style="display:none">
+        <div class="slider-row">
+          <label>Mini-batch N <span id="batchVal">1</span></label>
+          <input type="range" id="batchSlider" min="1" max="50" step="1" value="1">
+        </div>
+        <div class="slider-row">
+          <label>Decay τ (αₖ = α₀/(1+k/τ)) <span id="decayVal">50</span></label>
+          <input type="range" id="decaySlider" min="5" max="500" step="5" value="50">
+        </div>
+        <div class="slider-row">
+          <label>Samples m (components) <span id="sampVal">30</span></label>
+          <input type="range" id="sampSlider" min="5" max="100" step="1" value="30">
+        </div>
+      </div>
+
+      <div class="slider-row">
+        <label>Max iterations <span id="maxIterVal">200</span></label>
+        <input type="range" id="maxIterSlider" min="10" max="1000" step="10" value="200">
+      </div>
+      <div class="slider-row" id="condRow">
+        <label>Condition κ(A) <span id="condVal">10</span></label>
+        <input type="range" id="condSlider" min="1" max="200" step="1" value="10">
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="ctrl-group">
+      <h3>Controls</h3>
+      <div class="btn-row">
+        <button class="btn primary" id="runBtn">▶ Run</button>
+        <button class="btn" id="stepBtn">Step</button>
+        <button class="btn" id="resetBtn">Reset</button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="ctrl-group">
+      <h3>Results</h3>
+      <div class="stats">
+        <div class="row"><span class="lbl">Iterations:</span><span class="val" id="statIter">—</span></div>
+        <div class="row"><span class="lbl">f(xᵏ):</span><span class="val" id="statF">—</span></div>
+        <div class="row"><span class="lbl">‖∇f(xᵏ)‖:</span><span class="val" id="statGrad">—</span></div>
+        <div class="row"><span class="lbl">αₖ used:</span><span class="val" id="statAlpha">—</span></div>
+        <div class="row"><span class="lbl">Status:</span><span class="val" id="statStatus">Ready</span></div>
+      </div>
+      <div style="margin-top:8px">
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--accent1)"></div> Iterates xᵏ</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div> Starting x⁰</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--accent4)"></div> Optimum x*</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dynamic info box -->
+    <div class="info-box" id="infoBox"></div>
+  </div>
+</div>
+
+<script>
+// =====================================================================
+// FUNCTION DEFINITIONS
+// =====================================================================
+const FUNCTIONS = [
+  {
+    id: 'quadratic',
+    name: 'Quadratic (diagonal)',
+    expr: 'f(x) = ½(κ·x₁² + x₂²)',
+    view: { xmin:-5, xmax:5, ymin:-5, ymax:5 },
+    usesKappa: true,
+    xstar: [0, 0],
+    f: (x, y, p) => 0.5 * (p.L*x*x + p.sig*y*y),
+    grad: (x, y, p) => [p.L*x, p.sig*y],
+    getParams: (kappa) => ({ L: kappa, sig: 1 }),
+    info: `<strong>Diagonal quadratic.</strong> Eigenvalues of the Hessian are L and σ. 
+           When κ is large, contours become very elongated ellipses and GD zig-zags.
+           <br><br>Optimal step: <code>α = 2/(L+σ)</code>. Diverges if <code>α > 2/L</code>.`
+  },
+  {
+    id: 'quadratic_rotated',
+    name: 'Quadratic (rotated)',
+    expr: 'f(x) = ½ xᵀHx, H = RᵀΛR (45° rotation)',
+    view: { xmin:-5, xmax:5, ymin:-5, ymax:5 },
+    usesKappa: true,
+    xstar: [0, 0],
+    f: (x, y, p) => {
+      const c = Math.cos(p.theta), s = Math.sin(p.theta);
+      const u = c*x + s*y, v = -s*x + c*y;
+      return 0.5*(p.L*u*u + p.sig*v*v);
+    },
+    grad: (x, y, p) => {
+      const c = Math.cos(p.theta), s = Math.sin(p.theta);
+      const u = c*x + s*y, v = -s*x + c*y;
+      const du = p.L*u, dv = p.sig*v;
+      return [c*du - s*dv, s*du + c*dv];
+    },
+    getParams: (kappa) => ({ L: kappa, sig: 1, theta: Math.PI/4 }),
+    info: `<strong>Rotated quadratic.</strong> Same eigenvalues as diagonal, but axes tilted 45°.
+           GD doesn't align with eigenvectors → more zig-zagging visible.
+           <br><br>Shows why coordinate-aligned methods struggle on non-axis-aligned problems.`
+  },
+  {
+    id: 'rosenbrock',
+    name: 'Rosenbrock',
+    expr: 'f(x) = 100(x₂ − x₁²)² + (1 − x₁)²',
+    view: { xmin:-2.5, xmax:2.5, ymin:-1.5, ymax:3.5 },
+    usesKappa: false,
+    xstar: [1, 1],
+    f: (x, y) => 100*(y - x*x)**2 + (1-x)**2,
+    grad: (x, y) => [
+      -400*x*(y - x*x) - 2*(1-x),
+      200*(y - x*x)
+    ],
+    getParams: () => ({ L: 1600 }),  // approximate local L near (1,1)
+    info: `<strong>Rosenbrock banana.</strong> Non-convex-looking valley, but actually convex!
+           Minimum at (1,1). The narrow curved valley makes GD extremely slow.
+           <br><br>Try different starting points. Notice how GD finds the valley fast but crawls along it.`
+  },
+  {
+    id: 'beale',
+    name: 'Beale',
+    expr: 'f(x) = Σᵢ (cᵢ − x₁(1−x₂ⁱ))²',
+    view: { xmin:-1, xmax:4, ymin:-1, ymax:2.5 },
+    usesKappa: false,
+    xstar: [3, 0.5],
+    f: (x, y) => {
+      const t1 = 1.5 - x*(1-y);
+      const t2 = 2.25 - x*(1-y*y);
+      const t3 = 2.625 - x*(1-y*y*y);
+      return t1*t1 + t2*t2 + t3*t3;
+    },
+    grad: (x, y) => {
+      const t1 = 1.5 - x*(1-y);
+      const t2 = 2.25 - x*(1-y*y);
+      const t3 = 2.625 - x*(1-y*y*y);
+      return [
+        -2*t1*(1-y) - 2*t2*(1-y*y) - 2*t3*(1-y*y*y),
+        2*t1*x + 2*t2*2*x*y + 2*t3*3*x*y*y
+      ];
+    },
+    getParams: () => ({ L: 200 }),
+    info: `<strong>Beale function.</strong> A classic non-linear test with minimum at (3, 0.5).
+           Multiple flat regions make gradient-based methods slow in some areas.
+           <br><br>Good for testing backtracking line search vs fixed step.`
+  },
+  {
+    id: 'himmelblau',
+    name: 'Himmelblau',
+    expr: 'f(x) = (x₁² + x₂ − 11)² + (x₁ + x₂² − 7)²',
+    view: { xmin:-5, xmax:5, ymin:-5, ymax:5 },
+    usesKappa: false,
+    xstar: [3, 2],
+    f: (x, y) => (x*x + y - 11)**2 + (x + y*y - 7)**2,
+    grad: (x, y) => [
+      4*x*(x*x+y-11) + 2*(x+y*y-7),
+      2*(x*x+y-11) + 4*y*(x+y*y-7)
+    ],
+    getParams: () => ({ L: 300 }),
+    info: `<strong>Himmelblau.</strong> Has 4 identical minima at ≈(3,2), (-2.8,3.1), (-3.8,-3.3), (3.6,-1.8).
+           <br><br>Click different starting points and see which minimum GD converges to!
+           Demonstrates dependence of local methods on initialization.`
+  },
+  {
+    id: 'styblinski',
+    name: 'Styblinski-Tang',
+    expr: 'f(x) = ½ Σᵢ (xᵢ⁴ − 16xᵢ² + 5xᵢ)',
+    view: { xmin:-5, xmax:5, ymin:-5, ymax:5 },
+    usesKappa: false,
+    xstar: [-2.9035, -2.9035],
+    f: (x, y) => 0.5*((x**4 - 16*x*x + 5*x) + (y**4 - 16*y*y + 5*y)),
+    grad: (x, y) => [
+      0.5*(4*x**3 - 32*x + 5),
+      0.5*(4*y**3 - 32*y + 5)
+    ],
+    getParams: () => ({ L: 200 }),
+    info: `<strong>Styblinski-Tang.</strong> Multiple local minima. Global min at ≈(−2.9, −2.9).
+           <br><br>GD will get trapped in whichever basin the starting point falls into.
+           SGD's noise can occasionally help escape shallow local minima.`
+  },
+];
+
+// =====================================================================
+// STATE
+// =====================================================================
+let currentFnIdx = 0;
+let mode = 'gd';  // 'gd' or 'sgd'
+let strategy = 'fixed';
+let startPt = [-3.5, 2.8];
+let path = [];
+let fHist = [];
+let alphaHist = [];
+let animFrame = null;
+let animIdx = 0;
+
+function fn()   { return FUNCTIONS[currentFnIdx]; }
+function fnP()  { return fn().getParams(parseFloat(document.getElementById('condSlider').value)); }
+
+// =====================================================================
+// STOCHASTIC GRADIENT SUPPORT
+// For SGD, we decompose the objective into m components:
+//   f(x) = (1/m) Σ Fᵢ(x)
+// For quadratics: Fᵢ(x) = ½ (aᵢᵀx - bᵢ)²
+// For general functions, we add random noise to the true gradient.
+// =====================================================================
+let sgdComponents = null;  // { A: [[...]], b: [...] } for quadratics, null for general
+
+function buildSGDComponents() {
+  const m = parseInt(document.getElementById('sampSlider').value);
+  const fnObj = fn();
+
+  if (fnObj.id === 'quadratic' || fnObj.id === 'quadratic_rotated') {
+    // Construct A,b such that (1/m)·½‖Ax-b‖² matches the quadratic shape
+    const p = fnP();
+    const A = [];
+    const b = [];
+    for (let i = 0; i < m; i++) {
+      const a1 = randn(), a2 = randn();
+      A.push([a1, a2]);
+      b.push(randn() * 0.01); // near zero so x*≈0
+    }
+    // Scale columns to get desired eigenvalues
+    // A^T A ≈ m * I, so we scale column j
+    if (fnObj.id === 'quadratic') {
+      for (let i = 0; i < m; i++) {
+        A[i][0] *= Math.sqrt(p.L / m) * Math.sqrt(2);
+        A[i][1] *= Math.sqrt(p.sig / m) * Math.sqrt(2);
+      }
+    } else {
+      const c = Math.cos(p.theta), s = Math.sin(p.theta);
+      for (let i = 0; i < m; i++) {
+        const raw0 = A[i][0], raw1 = A[i][1];
+        const scaled0 = raw0 * Math.sqrt(p.L / m) * Math.sqrt(2);
+        const scaled1 = raw1 * Math.sqrt(p.sig / m) * Math.sqrt(2);
+        A[i][0] = c*scaled0 - s*scaled1;
+        A[i][1] = s*scaled0 + c*scaled1;
+      }
+    }
+    sgdComponents = { A, b, m, type: 'ls' };
+  } else {
+    // For non-quadratic: SGD = true gradient + noise (variance inversely proportional to batch)
+    sgdComponents = { m, type: 'noisy' };
+  }
+}
+
+function stochGrad(x, y) {
+  const batchSize = parseInt(document.getElementById('batchSlider').value);
+  const comp = sgdComponents;
+
+  if (comp.type === 'ls') {
+    const g = [0, 0];
+    for (let s = 0; s < batchSize; s++) {
+      const idx = Math.floor(Math.random() * comp.m);
+      const ai = comp.A[idx];
+      const ri = ai[0]*x + ai[1]*y - comp.b[idx];
+      g[0] += ai[0] * ri;
+      g[1] += ai[1] * ri;
+    }
+    // Scale to be unbiased: E[g] = full gradient
+    g[0] *= comp.m / batchSize;
+    g[1] *= comp.m / batchSize;
+    return g;
+  } else {
+    // Noisy gradient: true grad + noise scaled by 1/sqrt(batchSize)
+    const trueG = fn().grad(x, y, fnP());
+    const noiseScale = Math.max(0.5, Math.sqrt(trueG[0]**2 + trueG[1]**2)) / Math.sqrt(batchSize);
+    return [
+      trueG[0] + randn() * noiseScale,
+      trueG[1] + randn() * noiseScale
+    ];
+  }
+}
+
+function randn() {
+  const u1 = Math.random(), u2 = Math.random();
+  return Math.sqrt(-2*Math.log(u1+1e-30)) * Math.cos(2*Math.PI*u2);
+}
+
+// =====================================================================
+// CANVAS
+// =====================================================================
+const cC = document.getElementById('contourCanvas');
+const cV = document.getElementById('convCanvas');
+const ctxC = cC.getContext('2d');
+const ctxV = cV.getContext('2d');
+
+function resizeCanvases() {
+  for (const c of [cC, cV]) {
+    const r = c.parentElement.getBoundingClientRect();
+    const h = r.height - 28;
+    c.width = r.width * devicePixelRatio;
+    c.height = Math.max(h, 100) * devicePixelRatio;
+    c.style.width = r.width + 'px';
+    c.style.height = Math.max(h, 100) + 'px';
+  }
+}
+
+function getView() { return fn().view; }
+
+function worldToCanvas(wx, wy, canvas) {
+  const v = getView();
+  return [
+    (wx - v.xmin) / (v.xmax - v.xmin) * canvas.width,
+    (1 - (wy - v.ymin) / (v.ymax - v.ymin)) * canvas.height
+  ];
+}
+function canvasToWorld(cx, cy, canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const v = getView();
+  const px = (cx - rect.left) / rect.width;
+  const py = (cy - rect.top) / rect.height;
+  return [v.xmin + px*(v.xmax - v.xmin), v.ymax - py*(v.ymax - v.ymin)];
+}
+
+// =====================================================================
+// CONTOUR RENDERING
+// =====================================================================
+function drawContours(ctx, canvas) {
+  const w = canvas.width, h = canvas.height;
+  const v = getView();
+  const fnObj = fn();
+  const p = fnP();
+
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = '#0c0e13';
+  ctx.fillRect(0, 0, w, h);
+
+  // Pixel fill
+  const res = 2;
+  const cw = Math.ceil(w/res), ch = Math.ceil(h/res);
+  const imgData = ctx.createImageData(cw, ch);
+
+  // First pass: compute values
+  const vals = new Float32Array(cw * ch);
+  let maxVal = -Infinity, minVal = Infinity;
+  for (let py = 0; py < ch; py++) {
+    for (let px = 0; px < cw; px++) {
+      const wx = v.xmin + (px*res/w) * (v.xmax - v.xmin);
+      const wy = v.ymax - (py*res/h) * (v.ymax - v.ymin);
+      let val = fnObj.f(wx, wy, p);
+      vals[py*cw + px] = val;
+      if (isFinite(val)) {
+        maxVal = Math.max(maxVal, val);
+        minVal = Math.min(minVal, val);
+      }
+    }
+  }
+
+  // Shift all values so the minimum becomes 1 (handles negative functions like Styblinski-Tang)
+  const shift = -minVal + 1;
+  const logMin = Math.log(minVal + shift);  // = log(1) = 0
+  const logMax = Math.log(maxVal + shift);
+
+  for (let py = 0; py < ch; py++) {
+    for (let px = 0; px < cw; px++) {
+      const val = vals[py*cw + px];
+      const t = Math.max(0, Math.min(1,
+        (Math.log(val + shift) - logMin) / (logMax - logMin + 1e-10)
+      ));
+      const idx = (py * cw + px) * 4;
+      // Dark cool palette
+      imgData.data[idx]   = Math.floor(10 + t * 30);
+      imgData.data[idx+1] = Math.floor(14 + t * 60);
+      imgData.data[idx+2] = Math.floor(28 + t * 95);
+      imgData.data[idx+3] = 255;
+    }
+  }
+
+  const tmp = document.createElement('canvas');
+  tmp.width = cw; tmp.height = ch;
+  tmp.getContext('2d').putImageData(imgData, 0, 0);
+  ctx.imageSmoothingEnabled = true;
+  ctx.drawImage(tmp, 0, 0, w, h);
+
+  // Contour lines via proper marching squares
+  const numLevels = 20;
+  const levels = [];
+  for (let i = 0; i < numLevels; i++) {
+    // Generate levels in shifted-log space, then convert back to original values
+    const shiftedLevel = Math.exp(logMin + (i+1)/(numLevels+1) * (logMax - logMin));
+    levels.push(shiftedLevel - shift);
+  }
+
+  // Precompute a coarser grid for marching squares (faster + smoother)
+  const gs = 2; // grid step in pixels of the vals array
+  const gcw = Math.floor((cw - 1) / gs);
+  const gch = Math.floor((ch - 1) / gs);
+
+  function gval(gi, gj) { return vals[gj * gs * cw + gi * gs]; }
+
+  // Interpolation helper: fraction along edge where level crosses
+  function lerp(va, vb, lev) { return (lev - va) / (vb - va); }
+
+  ctx.strokeStyle = 'rgba(200,215,240,0.18)';
+  ctx.lineWidth = 1.0 * devicePixelRatio;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+
+  for (const lev of levels) {
+    ctx.beginPath();
+
+    for (let gj = 0; gj < gch; gj++) {
+      for (let gi = 0; gi < gcw; gi++) {
+        // Four corners: TL(00), TR(10), BR(11), BL(01)
+        const v00 = gval(gi, gj);
+        const v10 = gval(gi+1, gj);
+        const v11 = gval(gi+1, gj+1);
+        const v01 = gval(gi, gj+1);
+
+        // Marching squares case index (4-bit)
+        const c = (v00 >= lev ? 8 : 0) | (v10 >= lev ? 4 : 0)
+                | (v11 >= lev ? 2 : 0) | (v01 >= lev ? 1 : 0);
+        if (c === 0 || c === 15) continue;
+
+        // Pixel coords of corners
+        const x0 = gi * gs * res, x1 = (gi+1) * gs * res;
+        const y0 = gj * gs * res, y1 = (gj+1) * gs * res;
+
+        // Interpolated edge midpoints
+        // Top edge (00→10), Right edge (10→11), Bottom edge (01→11), Left edge (00→01)
+        const tX = x0 + lerp(v00, v10, lev) * (x1 - x0), tY = y0;
+        const rX = x1, rY = y0 + lerp(v10, v11, lev) * (y1 - y0);
+        const bX = x0 + lerp(v01, v11, lev) * (x1 - x0), bY = y1;
+        const lX = x0, lY = y0 + lerp(v00, v01, lev) * (y1 - y0);
+
+        // Draw line segments for each marching squares case
+        switch (c) {
+          case 1: case 14: ctx.moveTo(lX,lY); ctx.lineTo(bX,bY); break;
+          case 2: case 13: ctx.moveTo(bX,bY); ctx.lineTo(rX,rY); break;
+          case 3: case 12: ctx.moveTo(lX,lY); ctx.lineTo(rX,rY); break;
+          case 4: case 11: ctx.moveTo(tX,tY); ctx.lineTo(rX,rY); break;
+          case 5:  // saddle
+            ctx.moveTo(lX,lY); ctx.lineTo(tX,tY);
+            ctx.moveTo(bX,bY); ctx.lineTo(rX,rY); break;
+          case 6: case 9: ctx.moveTo(tX,tY); ctx.lineTo(bX,bY); break;
+          case 7: case 8: ctx.moveTo(lX,lY); ctx.lineTo(tX,tY); break;
+          case 10: // saddle
+            ctx.moveTo(tX,tY); ctx.lineTo(rX,rY);
+            ctx.moveTo(lX,lY); ctx.lineTo(bX,bY); break;
+        }
+      }
+    }
+    ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = 'rgba(200,210,230,0.07)';
+  ctx.lineWidth = 1;
+  const [ax0, ay0] = worldToCanvas(v.xmin, 0, canvas);
+  const [ax1, ay1] = worldToCanvas(v.xmax, 0, canvas);
+  ctx.beginPath(); ctx.moveTo(ax0, ay0); ctx.lineTo(ax1, ay1); ctx.stroke();
+  const [bx0, by0] = worldToCanvas(0, v.ymin, canvas);
+  const [bx1, by1] = worldToCanvas(0, v.ymax, canvas);
+  ctx.beginPath(); ctx.moveTo(bx0, by0); ctx.lineTo(bx1, by1); ctx.stroke();
+
+  // Tick labels
+  ctx.fillStyle = '#4a5070';
+  ctx.font = `${10*devicePixelRatio}px JetBrains Mono`;
+  ctx.textAlign = 'center';
+  const tickStep = Math.max(1, Math.round((v.xmax - v.xmin) / 6));
+  for (let t = Math.ceil(v.xmin); t <= Math.floor(v.xmax); t += tickStep) {
+    if (t === 0) continue;
+    const [tx, ty] = worldToCanvas(t, 0, canvas);
+    ctx.fillText(t, tx, ty + 13*devicePixelRatio);
+  }
+  for (let t = Math.ceil(v.ymin); t <= Math.floor(v.ymax); t += tickStep) {
+    if (t === 0) continue;
+    const [tx, ty] = worldToCanvas(0, t, canvas);
+    ctx.fillText(t, tx - 13*devicePixelRatio, ty + 4*devicePixelRatio);
+  }
+
+  // Optimum
+  const xs = fnObj.xstar;
+  const [ox, oy] = worldToCanvas(xs[0], xs[1], canvas);
+  ctx.fillStyle = '#ffd166';
+  ctx.shadowColor = 'rgba(255,209,102,0.6)';
+  ctx.shadowBlur = 10*devicePixelRatio;
+  ctx.beginPath(); ctx.arc(ox, oy, 4.5*devicePixelRatio, 0, 2*Math.PI); ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.font = `${9*devicePixelRatio}px JetBrains Mono`;
+  ctx.fillStyle = '#ffd166';
+  ctx.textAlign = 'left';
+  ctx.fillText('x*', ox + 7*devicePixelRatio, oy - 5*devicePixelRatio);
+}
+
+function drawPath(ctx, canvas, pathSlice) {
+  if (pathSlice.length < 1) return;
+  const clr = mode === 'sgd' ? '#ff6b6b' : '#00e5a0';
+  const glow = mode === 'sgd' ? 'rgba(255,107,107,0.4)' : 'rgba(0,229,160,0.4)';
+
+  // Line
+  ctx.strokeStyle = clr;
+  ctx.lineWidth = 1.3 * devicePixelRatio;
+  ctx.globalAlpha = 0.7;
+  ctx.beginPath();
+  for (let i = 0; i < pathSlice.length; i++) {
+    const [px, py] = worldToCanvas(pathSlice[i][0], pathSlice[i][1], canvas);
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // Dots
+  for (let i = 0; i < pathSlice.length; i++) {
+    const [px, py] = worldToCanvas(pathSlice[i][0], pathSlice[i][1], canvas);
+    const isFirst = i === 0;
+    const isLast = i === pathSlice.length - 1;
+    ctx.fillStyle = isFirst ? '#ff6b6b' : clr;
+    ctx.shadowColor = isFirst ? 'rgba(255,107,107,0.5)' : glow;
+    ctx.shadowBlur = (isFirst || isLast) ? 7*devicePixelRatio : 0;
+    const r = (isFirst || isLast) ? 3.5 : 1.5;
+    ctx.beginPath(); ctx.arc(px, py, r*devicePixelRatio, 0, 2*Math.PI); ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+}
+
+function drawConvergence(ctx, canvas, fHistSlice) {
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = '#0c0e13';
+  ctx.fillRect(0, 0, w, h);
+
+  if (fHistSlice.length < 2) {
+    ctx.fillStyle = '#6b7394';
+    ctx.font = `${11*devicePixelRatio}px JetBrains Mono`;
+    ctx.textAlign = 'center';
+    ctx.fillText('Run to see convergence', w/2, h/2);
+    return;
+  }
+
+  const fStar = fn().f(fn().xstar[0], fn().xstar[1], fnP());
+  const gaps = fHistSlice.map(v => Math.max(v - fStar, 1e-18));
+  const logGaps = gaps.map(v => Math.log10(v));
+
+  const pad = { l: 52*devicePixelRatio, r: 16*devicePixelRatio, t: 16*devicePixelRatio, b: 34*devicePixelRatio };
+  const pw = w - pad.l - pad.r;
+  const ph = h - pad.t - pad.b;
+
+  const finiteLog = logGaps.filter(v => isFinite(v));
+  let yMin = finiteLog.length > 0 ? Math.floor(Math.min(...finiteLog)) - 0.5 : -10;
+  let yMax = finiteLog.length > 0 ? Math.ceil(Math.max(...finiteLog)) + 0.5 : 5;
+  if (yMax - yMin < 2) { yMin -= 1; yMax += 1; }
+  const xMax = fHistSlice.length - 1;
+
+  // Grid
+  ctx.strokeStyle = 'rgba(200,210,230,0.06)';
+  ctx.lineWidth = 1;
+  for (let yl = Math.ceil(yMin); yl <= Math.floor(yMax); yl++) {
+    const py = pad.t + (1 - (yl - yMin)/(yMax - yMin)) * ph;
+    ctx.beginPath(); ctx.moveTo(pad.l, py); ctx.lineTo(pad.l + pw, py); ctx.stroke();
+    ctx.fillStyle = '#6b7394';
+    ctx.font = `${9*devicePixelRatio}px JetBrains Mono`;
+    ctx.textAlign = 'right';
+    ctx.fillText(`10^${yl}`, pad.l - 5*devicePixelRatio, py + 3*devicePixelRatio);
+  }
+
+  ctx.textAlign = 'center';
+  const step = Math.max(1, Math.floor(xMax/5));
+  for (let i = 0; i <= xMax; i += step) {
+    const px = pad.l + (i/Math.max(xMax,1)) * pw;
+    ctx.fillText(i, px, h - 10*devicePixelRatio);
+  }
+  ctx.fillText('iteration k', pad.l + pw/2, h - 1*devicePixelRatio);
+
+  // Curve
+  const clr = mode === 'sgd' ? '#ff6b6b' : '#00e5a0';
+  const glowClr = mode === 'sgd' ? 'rgba(255,107,107,0.3)' : 'rgba(0,229,160,0.3)';
+  ctx.strokeStyle = clr;
+  ctx.lineWidth = 2*devicePixelRatio;
+  ctx.shadowColor = glowClr;
+  ctx.shadowBlur = 5*devicePixelRatio;
+  ctx.beginPath();
+  for (let i = 0; i < logGaps.length; i++) {
+    if (!isFinite(logGaps[i])) continue;
+    const px = pad.l + (i/Math.max(xMax,1)) * pw;
+    const py = pad.t + (1 - (logGaps[i] - yMin)/(yMax - yMin)) * ph;
+    const cpy = Math.max(pad.t, Math.min(pad.t + ph, py));
+    if (i === 0) ctx.moveTo(px, cpy); else ctx.lineTo(px, cpy);
+  }
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // Y label
+  ctx.save();
+  ctx.translate(10*devicePixelRatio, pad.t + ph/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillStyle = '#6b7394';
+  ctx.font = `${9*devicePixelRatio}px JetBrains Mono`;
+  ctx.textAlign = 'center';
+  ctx.fillText('log₁₀(f(xᵏ) − f*)', 0, 0);
+  ctx.restore();
+
+  // Mode label
+  ctx.fillStyle = clr;
+  ctx.font = `bold ${10*devicePixelRatio}px JetBrains Mono`;
+  ctx.textAlign = 'right';
+  ctx.fillText(mode === 'sgd' ? 'SGD' : 'GD', w - pad.r, pad.t + 12*devicePixelRatio);
+}
+
+// =====================================================================
+// OPTIMIZATION ENGINE
+// =====================================================================
+function exactLineSearch2D(x, y, gx, gy) {
+  // Golden section on f(x - alpha*g)
+  let a = 0, b = 1;
+  const phi = (1 + Math.sqrt(5)) / 2;
+  const p = fnP();
+  const fLine = (alpha) => fn().f(x - alpha*gx, y - alpha*gy, p);
+  // Expand b until bracket
+  while (fLine(b) < fLine(a) && b < 100) b *= 2;
+  for (let i = 0; i < 50; i++) {
+    const x1 = b - (b-a)/phi;
+    const x2 = a + (b-a)/phi;
+    if (fLine(x1) < fLine(x2)) b = x2; else a = x1;
+  }
+  return (a+b)/2;
+}
+
+function backtrack(x, y, gx, gy) {
+  const c_arm = parseFloat(document.getElementById('cSlider').value);
+  const rho_arm = parseFloat(document.getElementById('rhoSlider').value);
+  let alpha = 1.0;
+  const p = fnP();
+  const fk = fn().f(x, y, p);
+  const gn2 = gx*gx + gy*gy;
+  for (let t = 0; t < 80; t++) {
+    if (fn().f(x - alpha*gx, y - alpha*gy, p) <= fk - c_arm*alpha*gn2) return alpha;
+    alpha *= rho_arm;
+  }
+  return alpha;
+}
+
+function runOptimizer() {
+  const maxIter = parseInt(document.getElementById('maxIterSlider').value);
+  const fnObj = fn();
+  const p = fnP();
+  const eps = 1e-12;
+
+  path = [[...startPt]];
+  fHist = [fnObj.f(startPt[0], startPt[1], p)];
+  alphaHist = [];
+
+  let x = startPt[0], y = startPt[1];
+
+  if (mode === 'sgd') buildSGDComponents();
+
+  const decay = parseFloat(document.getElementById('decaySlider').value);
+  const baseAlpha = parseFloat(document.getElementById('alphaSlider').value);
+
+  for (let k = 0; k < maxIter; k++) {
+    let gx, gy, alpha;
+
+    if (mode === 'gd') {
+      [gx, gy] = fnObj.grad(x, y, p);
+      const gn = Math.sqrt(gx*gx + gy*gy);
+      if (gn < eps) break;
+
+      if (strategy === 'fixed') {
+        alpha = baseAlpha;
+      } else if (strategy === 'exact') {
+        alpha = exactLineSearch2D(x, y, gx, gy);
+      } else {
+        alpha = backtrack(x, y, gx, gy);
+      }
+    } else {
+      // SGD
+      [gx, gy] = stochGrad(x, y);
+      alpha = baseAlpha / (1 + k / decay);
+    }
+
+    x = x - alpha * gx;
+    y = y - alpha * gy;
+    path.push([x, y]);
+    fHist.push(fnObj.f(x, y, p));
+    alphaHist.push(alpha);
+
+    // Divergence
+    if (!isFinite(x) || !isFinite(y) || Math.abs(x) > 1e6 || Math.abs(y) > 1e6) break;
+  }
+}
+
+// =====================================================================
+// ANIMATION
+// =====================================================================
+function animate() {
+  if (animIdx >= path.length) {
+    updateStats(path.length - 1);
+    return;
+  }
+  animIdx = Math.min(animIdx + Math.max(1, Math.floor(path.length / 100)), path.length);
+  drawContours(ctxC, cC);
+  drawPath(ctxC, cC, path.slice(0, animIdx));
+  drawConvergence(ctxV, cV, fHist.slice(0, animIdx));
+  updateStats(animIdx - 1);
+  animFrame = requestAnimationFrame(animate);
+}
+
+function updateStats(idx) {
+  if (idx < 0) idx = 0;
+  const p = fnP();
+  document.getElementById('statIter').textContent = idx;
+  document.getElementById('statF').textContent = fHist[idx] !== undefined ? fHist[idx].toExponential(4) : '—';
+
+  if (path[idx]) {
+    const g = fn().grad(path[idx][0], path[idx][1], p);
+    document.getElementById('statGrad').textContent = Math.sqrt(g[0]**2+g[1]**2).toExponential(3);
+  }
+  document.getElementById('statAlpha').textContent =
+    alphaHist[idx-1] !== undefined ? alphaHist[idx-1].toFixed(6) : '—';
+
+  const last = path[Math.min(idx, path.length-1)];
+  if (last && (!isFinite(last[0]) || !isFinite(last[1]) || Math.abs(last[0]) > 1e5)) {
+    document.getElementById('statStatus').textContent = 'DIVERGED ✗';
+    document.getElementById('statStatus').style.color = '#ff6b6b';
+  } else if (idx >= path.length - 1 && path.length > 1) {
+    const g = fn().grad(last[0], last[1], p);
+    const gn = Math.sqrt(g[0]**2+g[1]**2);
+    document.getElementById('statStatus').textContent = gn < 1e-4 ? 'Converged ✓' : 'Max iter reached';
+    document.getElementById('statStatus').style.color = gn < 1e-4 ? '#00e5a0' : '#ffd166';
+  } else {
+    document.getElementById('statStatus').textContent = 'Running…';
+    document.getElementById('statStatus').style.color = '#61afff';
+  }
+}
+
+// =====================================================================
+// UI UPDATES
+// =====================================================================
+function updateFormulaBar() {
+  const fnObj = fn();
+  const p = fnP();
+  document.getElementById('formulaDisplay').textContent = fnObj.expr;
+  document.getElementById('propL').textContent = p.L ? p.L.toFixed(1) : '≈' + (p.L||'?');
+  document.getElementById('propSigma').textContent = fnObj.usesKappa ? (p.sig||1).toFixed(2) : '—';
+  const kappa = parseInt(document.getElementById('condSlider').value);
+  document.getElementById('propKappa').textContent = fnObj.usesKappa ? kappa : '—';
+  document.getElementById('propXstar').textContent = `(${fnObj.xstar[0]}, ${fnObj.xstar[1]})`;
+  document.getElementById('infoBox').innerHTML = fnObj.info;
+}
+
+function updateModeUI() {
+  const isGD = mode === 'gd';
+  document.getElementById('strategyGroup').style.display = isGD ? '' : 'none';
+  document.getElementById('sgdParams').style.display = isGD ? 'none' : '';
+
+  // In SGD mode, always show alpha slider (it becomes α₀)
+  document.getElementById('alphaRow').style.display = '';
+  if (!isGD) {
+    document.getElementById('cRow').style.display = 'none';
+    document.getElementById('rhoRow').style.display = 'none';
+  } else {
+    updateStrategyUI();
+  }
+
+  // Update alpha label
+  const alphaLabel = document.querySelector('#alphaRow label');
+  alphaLabel.innerHTML = isGD
+    ? `Step size α <span id="alphaVal">${parseFloat(document.getElementById('alphaSlider').value).toFixed(4)}</span>`
+    : `Initial step α₀ <span id="alphaVal">${parseFloat(document.getElementById('alphaSlider').value).toFixed(4)}</span>`;
+}
+
+function updateStrategyUI() {
+  document.getElementById('alphaRow').style.display = strategy === 'fixed' ? '' : 'none';
+  document.getElementById('cRow').style.display = strategy === 'backtrack' ? '' : 'none';
+  document.getElementById('rhoRow').style.display = strategy === 'backtrack' ? '' : 'none';
+  if (mode === 'sgd') document.getElementById('alphaRow').style.display = '';
+}
+
+function buildFnList() {
+  const list = document.getElementById('fnList');
+  list.innerHTML = '';
+  FUNCTIONS.forEach((fnDef, i) => {
+    const card = document.createElement('button');
+    card.className = 'fn-card' + (i === currentFnIdx ? ' active' : '');
+    card.innerHTML = `<div class="fn-name">${fnDef.name}</div><div class="fn-expr">${fnDef.expr}</div>`;
+    card.addEventListener('click', () => {
+      currentFnIdx = i;
+      document.querySelectorAll('.fn-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+
+      // Update kappa slider visibility
+      document.getElementById('condRow').style.display = fnDef.usesKappa ? '' : 'none';
+
+      // Reset start to a reasonable point
+      const v = fnDef.view;
+      startPt = [v.xmin + (v.xmax-v.xmin)*0.2, v.ymin + (v.ymax-v.ymin)*0.75];
+
+      updateFormulaBar();
+      resetVis();
+    });
+    list.appendChild(card);
+  });
+}
+
+function resetVis() {
+  if (animFrame) cancelAnimationFrame(animFrame);
+  path = []; fHist = []; alphaHist = []; animIdx = 0;
+  drawContours(ctxC, cC);
+  // Show starting point preview
+  const [px, py] = worldToCanvas(startPt[0], startPt[1], cC);
+  ctxC.fillStyle = '#ff6b6b';
+  ctxC.shadowColor = 'rgba(255,107,107,0.6)';
+  ctxC.shadowBlur = 10*devicePixelRatio;
+  ctxC.beginPath(); ctxC.arc(px, py, 5*devicePixelRatio, 0, 2*Math.PI); ctxC.fill();
+  ctxC.shadowBlur = 0;
+  drawConvergence(ctxV, cV, []);
+  document.getElementById('statIter').textContent = '—';
+  document.getElementById('statF').textContent = '—';
+  document.getElementById('statGrad').textContent = '—';
+  document.getElementById('statAlpha').textContent = '—';
+  document.getElementById('statStatus').textContent = 'Ready';
+  document.getElementById('statStatus').style.color = '';
+}
+
+// =====================================================================
+// EVENT HANDLERS
+// =====================================================================
+// Mode toggle
+document.querySelectorAll('#modeToggle .toggle-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#modeToggle .toggle-btn').forEach(b => {
+      b.classList.remove('active', 'active-sgd');
+    });
+    mode = btn.dataset.mode;
+    btn.classList.add(mode === 'sgd' ? 'active-sgd' : 'active');
+    updateModeUI();
+  });
+});
+
+// Strategy
+document.querySelectorAll('.strategy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.strategy-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    strategy = btn.dataset.s;
+    updateStrategyUI();
+  });
+});
+
+// Sliders
+document.getElementById('alphaSlider').addEventListener('input', e => {
+  document.getElementById('alphaVal').textContent = parseFloat(e.target.value).toFixed(4);
+});
+document.getElementById('cSlider').addEventListener('input', e => {
+  document.getElementById('cVal').textContent = parseFloat(e.target.value).toFixed(2);
+});
+document.getElementById('rhoSlider').addEventListener('input', e => {
+  document.getElementById('rhoVal').textContent = parseFloat(e.target.value).toFixed(2);
+});
+document.getElementById('maxIterSlider').addEventListener('input', e => {
+  document.getElementById('maxIterVal').textContent = e.target.value;
+});
+document.getElementById('condSlider').addEventListener('input', e => {
+  document.getElementById('condVal').textContent = e.target.value;
+  updateFormulaBar();
+  resetVis();
+});
+document.getElementById('batchSlider').addEventListener('input', e => {
+  document.getElementById('batchVal').textContent = e.target.value;
+});
+document.getElementById('decaySlider').addEventListener('input', e => {
+  document.getElementById('decayVal').textContent = e.target.value;
+});
+document.getElementById('sampSlider').addEventListener('input', e => {
+  document.getElementById('sampVal').textContent = e.target.value;
+});
+
+// Buttons
+document.getElementById('runBtn').addEventListener('click', () => {
+  if (animFrame) cancelAnimationFrame(animFrame);
+  runOptimizer();
+  animIdx = 0;
+  animate();
+});
+
+document.getElementById('stepBtn').addEventListener('click', () => {
+  if (path.length === 0) { runOptimizer(); animIdx = 0; }
+  if (animFrame) cancelAnimationFrame(animFrame);
+  animIdx = Math.min(animIdx + 1, path.length);
+  drawContours(ctxC, cC);
+  drawPath(ctxC, cC, path.slice(0, animIdx));
+  drawConvergence(ctxV, cV, fHist.slice(0, animIdx));
+  updateStats(animIdx - 1);
+});
+
+document.getElementById('resetBtn').addEventListener('click', resetVis);
+
+// Click to set starting point
+cC.addEventListener('click', e => {
+  const [wx, wy] = canvasToWorld(e.clientX, e.clientY, cC);
+  const v = getView();
+  if (wx >= v.xmin && wx <= v.xmax && wy >= v.ymin && wy <= v.ymax) {
+    startPt = [wx, wy];
+    resetVis();
+  }
+});
+
+// =====================================================================
+// INIT
+// =====================================================================
+window.addEventListener('resize', () => {
+  resizeCanvases();
+  if (path.length > 0) {
+    drawContours(ctxC, cC);
+    drawPath(ctxC, cC, path.slice(0, animIdx));
+    drawConvergence(ctxV, cV, fHist.slice(0, animIdx));
+  } else {
+    drawContours(ctxC, cC);
+    drawConvergence(ctxV, cV, []);
+  }
+});
+
+buildFnList();
+resizeCanvases();
+updateFormulaBar();
+updateModeUI();
+resetVis();
+</script>
+</body>
+</html>
