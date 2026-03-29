@@ -17,9 +17,11 @@
     --accent2: #ff6b6b;
     --accent3: #61afff;
     --accent4: #ffd166;
+    --accent5: #c084fc;
     --accent1-glow: rgba(0,229,160,0.25);
     --accent2-glow: rgba(255,107,107,0.25);
     --accent3-glow: rgba(97,175,255,0.25);
+    --accent5-glow: rgba(192,132,252,0.25);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -63,7 +65,7 @@
     margin-left: auto;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px; color: var(--text-dim);
-    display: flex; gap: 16px;
+    display: flex; gap: 16px; flex-wrap: wrap;
   }
   .formula-bar .props span { color: var(--accent3); }
 
@@ -121,17 +123,20 @@
     background: var(--bg); border-radius: 6px; padding: 3px;
   }
   .toggle-btn {
-    flex: 1; padding: 6px 8px;
+    flex: 1; padding: 6px 6px;
     border: none; border-radius: 4px;
     background: transparent; color: var(--text-dim);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; cursor: pointer; transition: all 0.2s;
+    font-size: 10px; cursor: pointer; transition: all 0.2s;
   }
   .toggle-btn.active {
     background: var(--accent1); color: var(--bg); font-weight: 700;
   }
   .toggle-btn.active-sgd {
     background: var(--accent2); color: var(--bg); font-weight: 700;
+  }
+  .toggle-btn.active-mgc {
+    background: var(--accent5); color: var(--bg); font-weight: 700;
   }
 
   /* Function cards */
@@ -168,6 +173,20 @@
   .strategy-btn.active {
     background: rgba(0,229,160,0.08); border-color: var(--accent1);
     color: var(--accent1); box-shadow: 0 0 10px var(--accent1-glow);
+  }
+
+  /* Constraint set buttons */
+  .constraint-btn {
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 10px;
+    color: var(--text); font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; cursor: pointer; text-align: left;
+    transition: all 0.2s;
+  }
+  .constraint-btn:hover { border-color: var(--accent5); color: var(--accent5); }
+  .constraint-btn.active {
+    background: rgba(192,132,252,0.08); border-color: var(--accent5);
+    color: var(--accent5); box-shadow: 0 0 10px var(--accent5-glow);
   }
 
   /* Sliders */
@@ -240,29 +259,31 @@
 
 <div class="header">
   <h1>▸ Gradient Descent Explorer</h1>
-  <div class="sub">Tehnici de Optimizare — Laborator 2</div>
+  <div class="sub">Tehnici de Optimizare — Laborator interactiv</div>
 </div>
 
 <div class="formula-bar">
   <div class="label">Minimizing</div>
   <div class="formula" id="formulaDisplay">f(x₁,x₂) = ½(κ·x₁² + x₂²)</div>
-  <div class="props">
+  <div class="props" id="propsBar">
     <div>L = <span id="propL">—</span></div>
     <div>σ = <span id="propSigma">—</span></div>
     <div>κ = <span id="propKappa">—</span></div>
     <div>x* = <span id="propXstar">—</span></div>
+    <div id="propQWrap" style="display:none">Q = <span id="propQ">—</span></div>
+    <div id="propRWrap" style="display:none">r = <span id="propR">—</span></div>
   </div>
 </div>
 
 <div class="layout">
   <div class="canvas-area">
     <div class="canvas-panel">
-      <div class="panel-label">Contour Plot + Iterates</div>
+      <div class="panel-label" id="contourLabel">Contour Plot + Iterates</div>
       <canvas id="contourCanvas"></canvas>
-      <div class="click-hint">Click to set x⁰</div>
+      <div class="click-hint" id="clickHint">Click to set x⁰</div>
     </div>
     <div class="canvas-panel">
-      <div class="panel-label">Convergence: f(xᵏ) − f*</div>
+      <div class="panel-label" id="convLabel">Convergence: f(xᵏ) − f*</div>
       <canvas id="convCanvas"></canvas>
     </div>
   </div>
@@ -272,8 +293,9 @@
     <div class="ctrl-group">
       <h3>Method</h3>
       <div class="toggle-row" id="modeToggle">
-        <button class="toggle-btn active" data-mode="gd">Gradient Descent</button>
-        <button class="toggle-btn" data-mode="sgd">Stochastic GD</button>
+        <button class="toggle-btn active" data-mode="gd">GD</button>
+        <button class="toggle-btn" data-mode="sgd">SGD</button>
+        <button class="toggle-btn" data-mode="mgc">Cond. GD</button>
       </div>
     </div>
 
@@ -293,6 +315,27 @@
       </div>
     </div>
 
+    <!-- MGC Constraint Set (only in MGC mode) -->
+    <div class="ctrl-group" id="constraintGroup" style="display:none">
+      <h3>Constraint Set Q</h3>
+      <div class="strategy-btns" id="constraintBtns">
+        <button class="constraint-btn active" data-q="l2">‖x‖₂ ≤ r  (Euclidean ball)</button>
+        <button class="constraint-btn" data-q="l1">‖x‖₁ ≤ r  (Diamond / L₁)</button>
+        <button class="constraint-btn" data-q="linf">‖x‖∞ ≤ r  (Box / L∞)</button>
+        <button class="constraint-btn" data-q="simplex">x ≥ 0, Σxᵢ ≤ r  (Simplex)</button>
+      </div>
+    </div>
+
+    <!-- MGC Step-Size Strategy (only in MGC mode) -->
+    <div class="ctrl-group" id="mgcStrategyGroup" style="display:none">
+      <h3>Step-Size Strategy (FW)</h3>
+      <div class="strategy-btns" id="mgcStepBtns">
+        <button class="strategy-btn active" data-ms="standard">αₖ = 2/(k+2)  (standard)</button>
+        <button class="strategy-btn" data-ms="fixed">αₖ = α  (constant)</button>
+        <button class="strategy-btn" data-ms="linesearch">Line search on [0,1]</button>
+      </div>
+    </div>
+
     <!-- Parameters -->
     <div class="ctrl-group">
       <h3>Parameters</h3>
@@ -307,6 +350,17 @@
       <div class="slider-row" id="rhoRow" style="display:none">
         <label>Armijo ρ <span id="rhoVal">0.50</span></label>
         <input type="range" id="rhoSlider" min="0.1" max="0.95" step="0.05" value="0.5">
+      </div>
+
+      <!-- MGC radius -->
+      <div class="slider-row" id="radiusRow" style="display:none">
+        <label>Constraint radius r <span id="radiusVal">3.00</span></label>
+        <input type="range" id="radiusSlider" min="0.5" max="6" step="0.1" value="3.0">
+      </div>
+      <!-- MGC fixed alpha (separate range) -->
+      <div class="slider-row" id="mgcAlphaRow" style="display:none">
+        <label>Step size α <span id="mgcAlphaVal">0.10</span></label>
+        <input type="range" id="mgcAlphaSlider" min="0.01" max="1.0" step="0.01" value="0.10">
       </div>
 
       <!-- SGD-specific -->
@@ -352,11 +406,12 @@
         <div class="row"><span class="lbl">Iterations:</span><span class="val" id="statIter">—</span></div>
         <div class="row"><span class="lbl">f(xᵏ):</span><span class="val" id="statF">—</span></div>
         <div class="row"><span class="lbl">‖∇f(xᵏ)‖:</span><span class="val" id="statGrad">—</span></div>
+        <div class="row" id="statGapRow" style="display:none"><span class="lbl">Duality gap gₖ:</span><span class="val" id="statGap">—</span></div>
         <div class="row"><span class="lbl">αₖ used:</span><span class="val" id="statAlpha">—</span></div>
         <div class="row"><span class="lbl">Status:</span><span class="val" id="statStatus">Ready</span></div>
       </div>
       <div style="margin-top:8px">
-        <div class="legend">
+        <div class="legend" id="legendArea">
           <div class="legend-item"><div class="legend-dot" style="background:var(--accent1)"></div> Iterates xᵏ</div>
           <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div> Starting x⁰</div>
           <div class="legend-item"><div class="legend-dot" style="background:var(--accent4)"></div> Optimum x*</div>
@@ -384,9 +439,17 @@ const FUNCTIONS = [
     f: (x, y, p) => 0.5 * (p.L*x*x + p.sig*y*y),
     grad: (x, y, p) => [p.L*x, p.sig*y],
     getParams: (kappa) => ({ L: kappa, sig: 1 }),
-    info: `<strong>Diagonal quadratic.</strong> Eigenvalues of the Hessian are L and σ. 
+    info: {
+      gd: `<strong>Diagonal quadratic.</strong> Eigenvalues of the Hessian are L and σ.
            When κ is large, contours become very elongated ellipses and GD zig-zags.
-           <br><br>Optimal step: <code>α = 2/(L+σ)</code>. Diverges if <code>α > 2/L</code>.`
+           <br><br>Optimal step: <code>α = 2/(L+σ)</code>. Diverges if <code>α > 2/L</code>.`,
+      sgd: `<strong>Diagonal quadratic.</strong> SGD decomposes f into m stochastic components.
+           <br><br>Larger batch N → less noise → more like GD. Decay τ controls the learning rate schedule.`,
+      mgc: `<strong>Diagonal quadratic.</strong> Unconstrained min at (0,0).
+           When Q doesn't contain the origin, watch FW zig-zag along the boundary!
+           <br><br>The <strong>duality gap</strong> gₖ = ∇f(xᵏ)ᵀ(xᵏ − φ_Q(xᵏ)) is a
+           computable convergence certificate unique to Frank-Wolfe.`
+    }
   },
   {
     id: 'quadratic_rotated',
@@ -407,9 +470,17 @@ const FUNCTIONS = [
       return [c*du - s*dv, s*du + c*dv];
     },
     getParams: (kappa) => ({ L: kappa, sig: 1, theta: Math.PI/4 }),
-    info: `<strong>Rotated quadratic.</strong> Same eigenvalues as diagonal, but axes tilted 45°.
+    info: {
+      gd: `<strong>Rotated quadratic.</strong> Same eigenvalues as diagonal, but axes tilted 45°.
            GD doesn't align with eigenvectors → more zig-zagging visible.
-           <br><br>Shows why coordinate-aligned methods struggle on non-axis-aligned problems.`
+           <br><br>Shows why coordinate-aligned methods struggle on non-axis-aligned problems.`,
+      sgd: `<strong>Rotated quadratic.</strong> Rotation misaligns the gradient with coordinate axes.
+           SGD noise adds to the misalignment — compare convergence with the diagonal version.`,
+      mgc: `<strong>Rotated quadratic.</strong> Axes tilted 45°. Shows how the geometry
+           of Q interacts with the function's contour shape.
+           <br><br>Compare L₁ vs L₂ constraints — the L₁ ball aligns with axes, so
+           FW vertices jump between a small set of corners.`
+    }
   },
   {
     id: 'rosenbrock',
@@ -423,10 +494,18 @@ const FUNCTIONS = [
       -400*x*(y - x*x) - 2*(1-x),
       200*(y - x*x)
     ],
-    getParams: () => ({ L: 1600 }),  // approximate local L near (1,1)
-    info: `<strong>Rosenbrock banana.</strong> Non-convex-looking valley, but actually convex!
+    getParams: () => ({ L: 1600 }),
+    info: {
+      gd: `<strong>Rosenbrock banana.</strong> Non-convex-looking valley, but actually convex!
            Minimum at (1,1). The narrow curved valley makes GD extremely slow.
-           <br><br>Try different starting points. Notice how GD finds the valley fast but crawls along it.`
+           <br><br>Try different starting points. Notice how GD finds the valley fast but crawls along it.`,
+      sgd: `<strong>Rosenbrock banana.</strong> The narrow valley is hard even for SGD.
+           Try large batch sizes to stabilize progress along the valley floor.`,
+      mgc: `<strong>Rosenbrock banana.</strong> Minimum at (1,1). The narrow curved valley
+           challenges projection-free methods too.
+           <br><br>Notice how FW selects different vertices of Q as the gradient direction
+           changes along the valley. Convergence rate is O(1/k) — sublinear.`
+    }
   },
   {
     id: 'beale',
@@ -451,9 +530,16 @@ const FUNCTIONS = [
       ];
     },
     getParams: () => ({ L: 200 }),
-    info: `<strong>Beale function.</strong> A classic non-linear test with minimum at (3, 0.5).
+    info: {
+      gd: `<strong>Beale function.</strong> A classic non-linear test with minimum at (3, 0.5).
            Multiple flat regions make gradient-based methods slow in some areas.
-           <br><br>Good for testing backtracking line search vs fixed step.`
+           <br><br>Good for testing backtracking line search vs fixed step.`,
+      sgd: `<strong>Beale function.</strong> Flat regions cause vanishing gradients.
+           SGD noise can help explore, but may also cause instability near the minimum.`,
+      mgc: `<strong>Beale function.</strong> Minimum at (3, 0.5).
+           Multiple flat regions interact with the constraint set geometry.
+           <br><br>Try different constraint radii to see how the feasible region affects convergence.`
+    }
   },
   {
     id: 'himmelblau',
@@ -468,9 +554,16 @@ const FUNCTIONS = [
       2*(x*x+y-11) + 4*y*(x+y*y-7)
     ],
     getParams: () => ({ L: 300 }),
-    info: `<strong>Himmelblau.</strong> Has 4 identical minima at ≈(3,2), (-2.8,3.1), (-3.8,-3.3), (3.6,-1.8).
+    info: {
+      gd: `<strong>Himmelblau.</strong> Has 4 identical minima at ≈(3,2), (-2.8,3.1), (-3.8,-3.3), (3.6,-1.8).
            <br><br>Click different starting points and see which minimum GD converges to!
-           Demonstrates dependence of local methods on initialization.`
+           Demonstrates dependence of local methods on initialization.`,
+      sgd: `<strong>Himmelblau.</strong> 4 identical minima. SGD noise can sometimes help
+           escape from one basin to another — increase the noise to see!`,
+      mgc: `<strong>Himmelblau.</strong> Four minima — which one does FW find?
+           It depends on x⁰ and the constraint set.
+           <br><br>A smaller Q restricts the reachable set, while larger Q may include multiple minima.`
+    }
   },
   {
     id: 'styblinski',
@@ -485,53 +578,177 @@ const FUNCTIONS = [
       0.5*(4*y**3 - 32*y + 5)
     ],
     getParams: () => ({ L: 200 }),
-    info: `<strong>Styblinski-Tang.</strong> Multiple local minima. Global min at ≈(−2.9, −2.9).
+    info: {
+      gd: `<strong>Styblinski-Tang.</strong> Multiple local minima. Global min at ≈(−2.9, −2.9).
            <br><br>GD will get trapped in whichever basin the starting point falls into.
-           SGD's noise can occasionally help escape shallow local minima.`
+           SGD's noise can occasionally help escape shallow local minima.`,
+      sgd: `<strong>Styblinski-Tang.</strong> Multiple local minima. Global min at ≈(−2.9, −2.9).
+           <br><br>SGD noise may help escape shallow basins. Try high noise + slow decay.`,
+      mgc: `<strong>Styblinski-Tang.</strong> Multiple local minima. With a small enough
+           constraint set, you can isolate a single basin.
+           <br><br>FW's sublinear convergence rate is clearly visible here.`
+    }
+  },
+  {
+    id: 'shifted_quadratic',
+    name: 'Shifted Quadratic',
+    expr: 'f(x) = ½((x₁−3)² + (x₂−2)²)',
+    view: { xmin:-2, xmax:5, ymin:-2, ymax:4 },
+    usesKappa: false,
+    xstar: [3, 2],
+    f: (x, y) => 0.5*((x-3)**2 + (y-2)**2),
+    grad: (x, y) => [x-3, y-2],
+    getParams: () => ({ L: 1, sig: 1 }),
+    info: {
+      gd: `<strong>Shifted quadratic.</strong> Simple isotropic quadratic with minimum at (3, 2).
+           <br><br>Easy for GD — converges in very few steps with any reasonable step size.`,
+      sgd: `<strong>Shifted quadratic.</strong> Isotropic and easy. Good baseline to see
+           how noise affects convergence around a clean minimum.`,
+      mgc: `<strong>Shifted quadratic.</strong> Min at (3, 2). With small r, this lies
+           outside Q and the constrained optimum is on Q's boundary.
+           <br><br>Frank-Wolfe always stays feasible — each iterate is a convex
+           combination of the previous point and a vertex of Q.`
+    }
   },
 ];
+
+// =====================================================================
+// CONSTRAINT SET DEFINITIONS (used only in MGC mode)
+// =====================================================================
+const CONSTRAINTS = {
+  l2: {
+    name: 'L₂ ball', label: '‖x‖₂ ≤ r',
+    lmo: (gx, gy, r) => {
+      const gn = Math.sqrt(gx*gx + gy*gy);
+      if (gn < 1e-15) return [0, 0];
+      return [-r * gx / gn, -r * gy / gn];
+    },
+    contains: (x, y, r) => x*x + y*y <= r*r + 1e-10,
+    project: (x, y, r) => {
+      const n = Math.sqrt(x*x + y*y);
+      if (n <= r) return [x, y];
+      return [r*x/n, r*y/n];
+    },
+    drawPath: (ctx, canvas, r, wToC) => {
+      const N = 100;
+      ctx.beginPath();
+      for (let i = 0; i <= N; i++) {
+        const t = (2 * Math.PI * i) / N;
+        const [px, py] = wToC(r * Math.cos(t), r * Math.sin(t));
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+    }
+  },
+  l1: {
+    name: 'L₁ ball', label: '‖x‖₁ ≤ r',
+    lmo: (gx, gy, r) => {
+      if (Math.abs(gx) >= Math.abs(gy)) return [-r * Math.sign(gx || 1), 0];
+      return [0, -r * Math.sign(gy || 1)];
+    },
+    contains: (x, y, r) => Math.abs(x) + Math.abs(y) <= r + 1e-10,
+    project: (x, y, r) => {
+      if (Math.abs(x) + Math.abs(y) <= r) return [x, y];
+      const sx = Math.sign(x), sy = Math.sign(y);
+      let ax = Math.abs(x), ay = Math.abs(y);
+      const mu = (ax + ay - r) / 2;
+      ax = Math.max(0, ax - mu); ay = Math.max(0, ay - mu);
+      return [sx * ax, sy * ay];
+    },
+    drawPath: (ctx, canvas, r, wToC) => {
+      const verts = [[r,0],[0,r],[-r,0],[0,-r]];
+      ctx.beginPath();
+      verts.forEach((v, i) => {
+        const [px, py] = wToC(v[0], v[1]);
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      });
+      ctx.closePath();
+    }
+  },
+  linf: {
+    name: 'L∞ ball', label: '‖x‖∞ ≤ r',
+    lmo: (gx, gy, r) => [-r * Math.sign(gx || 1), -r * Math.sign(gy || 1)],
+    contains: (x, y, r) => Math.max(Math.abs(x), Math.abs(y)) <= r + 1e-10,
+    project: (x, y, r) => [Math.max(-r, Math.min(r, x)), Math.max(-r, Math.min(r, y))],
+    drawPath: (ctx, canvas, r, wToC) => {
+      const verts = [[-r,-r],[r,-r],[r,r],[-r,r]];
+      ctx.beginPath();
+      verts.forEach((v, i) => {
+        const [px, py] = wToC(v[0], v[1]);
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      });
+      ctx.closePath();
+    }
+  },
+  simplex: {
+    name: 'Simplex', label: 'x ≥ 0, Σxᵢ ≤ r',
+    lmo: (gx, gy, r) => {
+      const vals = [
+        { z: [0, 0], v: 0 },
+        { z: [r, 0], v: gx * r },
+        { z: [0, r], v: gy * r },
+      ];
+      vals.sort((a, b) => a.v - b.v);
+      return vals[0].z;
+    },
+    contains: (x, y, r) => x >= -1e-10 && y >= -1e-10 && x + y <= r + 1e-10,
+    project: (x, y, r) => {
+      let px = Math.max(0, x), py = Math.max(0, y);
+      if (px + py <= r) return [px, py];
+      const s = (px + py - r) / 2;
+      px = Math.max(0, px - s); py = Math.max(0, py - s);
+      return [px, py];
+    },
+    drawPath: (ctx, canvas, r, wToC) => {
+      const verts = [[0,0],[r,0],[0,r]];
+      ctx.beginPath();
+      verts.forEach((v, i) => {
+        const [px, py] = wToC(v[0], v[1]);
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      });
+      ctx.closePath();
+    }
+  }
+};
 
 // =====================================================================
 // STATE
 // =====================================================================
 let currentFnIdx = 0;
-let mode = 'gd';  // 'gd' or 'sgd'
-let strategy = 'fixed';
+let mode = 'gd';         // 'gd', 'sgd', or 'mgc'
+let strategy = 'fixed';  // GD step-size strategy
+let mgcStrategy = 'standard'; // MGC step-size strategy
+let constraintType = 'l2';
 let startPt = [-3.5, 2.8];
 let path = [];
 let fHist = [];
 let alphaHist = [];
+let gapHist = [];
+let fwVertices = [];
 let animFrame = null;
 let animIdx = 0;
 
 function fn()   { return FUNCTIONS[currentFnIdx]; }
 function fnP()  { return fn().getParams(parseFloat(document.getElementById('condSlider').value)); }
+function cst()  { return CONSTRAINTS[constraintType]; }
+function getRadius() { return parseFloat(document.getElementById('radiusSlider').value); }
 
 // =====================================================================
-// STOCHASTIC GRADIENT SUPPORT
-// For SGD, we decompose the objective into m components:
-//   f(x) = (1/m) Σ Fᵢ(x)
-// For quadratics: Fᵢ(x) = ½ (aᵢᵀx - bᵢ)²
-// For general functions, we add random noise to the true gradient.
+// SGD SUPPORT (unchanged)
 // =====================================================================
-let sgdComponents = null;  // { A: [[...]], b: [...] } for quadratics, null for general
+let sgdComponents = null;
 
 function buildSGDComponents() {
   const m = parseInt(document.getElementById('sampSlider').value);
   const fnObj = fn();
-
   if (fnObj.id === 'quadratic' || fnObj.id === 'quadratic_rotated') {
-    // Construct A,b such that (1/m)·½‖Ax-b‖² matches the quadratic shape
     const p = fnP();
-    const A = [];
-    const b = [];
+    const A = [], b = [];
     for (let i = 0; i < m; i++) {
       const a1 = randn(), a2 = randn();
       A.push([a1, a2]);
-      b.push(randn() * 0.01); // near zero so x*≈0
+      b.push(randn() * 0.01);
     }
-    // Scale columns to get desired eigenvalues
-    // A^T A ≈ m * I, so we scale column j
     if (fnObj.id === 'quadratic') {
       for (let i = 0; i < m; i++) {
         A[i][0] *= Math.sqrt(p.L / m) * Math.sqrt(2);
@@ -549,7 +766,6 @@ function buildSGDComponents() {
     }
     sgdComponents = { A, b, m, type: 'ls' };
   } else {
-    // For non-quadratic: SGD = true gradient + noise (variance inversely proportional to batch)
     sgdComponents = { m, type: 'noisy' };
   }
 }
@@ -557,7 +773,6 @@ function buildSGDComponents() {
 function stochGrad(x, y) {
   const batchSize = parseInt(document.getElementById('batchSlider').value);
   const comp = sgdComponents;
-
   if (comp.type === 'ls') {
     const g = [0, 0];
     for (let s = 0; s < batchSize; s++) {
@@ -567,18 +782,13 @@ function stochGrad(x, y) {
       g[0] += ai[0] * ri;
       g[1] += ai[1] * ri;
     }
-    // Scale to be unbiased: E[g] = full gradient
     g[0] *= comp.m / batchSize;
     g[1] *= comp.m / batchSize;
     return g;
   } else {
-    // Noisy gradient: true grad + noise scaled by 1/sqrt(batchSize)
     const trueG = fn().grad(x, y, fnP());
     const noiseScale = Math.max(0.5, Math.sqrt(trueG[0]**2 + trueG[1]**2)) / Math.sqrt(batchSize);
-    return [
-      trueG[0] + randn() * noiseScale,
-      trueG[1] + randn() * noiseScale
-    ];
+    return [trueG[0] + randn() * noiseScale, trueG[1] + randn() * noiseScale];
   }
 }
 
@@ -606,7 +816,17 @@ function resizeCanvases() {
   }
 }
 
-function getView() { return fn().view; }
+function getView() {
+  if (mode === 'mgc') {
+    const r = getRadius();
+    const pad = Math.max(r * 0.6, 1.5);
+    if (constraintType === 'simplex') {
+      return { xmin: -pad * 0.5, xmax: r + pad, ymin: -pad * 0.5, ymax: r + pad };
+    }
+    return { xmin: -r - pad, xmax: r + pad, ymin: -r - pad, ymax: r + pad };
+  }
+  return fn().view;
+}
 
 function worldToCanvas(wx, wy, canvas) {
   const v = getView();
@@ -641,7 +861,6 @@ function drawContours(ctx, canvas) {
   const cw = Math.ceil(w/res), ch = Math.ceil(h/res);
   const imgData = ctx.createImageData(cw, ch);
 
-  // First pass: compute values
   const vals = new Float32Array(cw * ch);
   let maxVal = -Infinity, minVal = Infinity;
   for (let py = 0; py < ch; py++) {
@@ -657,9 +876,8 @@ function drawContours(ctx, canvas) {
     }
   }
 
-  // Shift all values so the minimum becomes 1 (handles negative functions like Styblinski-Tang)
   const shift = -minVal + 1;
-  const logMin = Math.log(minVal + shift);  // = log(1) = 0
+  const logMin = Math.log(minVal + shift);
   const logMax = Math.log(maxVal + shift);
 
   for (let py = 0; py < ch; py++) {
@@ -669,7 +887,6 @@ function drawContours(ctx, canvas) {
         (Math.log(val + shift) - logMin) / (logMax - logMin + 1e-10)
       ));
       const idx = (py * cw + px) * 4;
-      // Dark cool palette
       imgData.data[idx]   = Math.floor(10 + t * 30);
       imgData.data[idx+1] = Math.floor(14 + t * 60);
       imgData.data[idx+2] = Math.floor(28 + t * 95);
@@ -683,23 +900,18 @@ function drawContours(ctx, canvas) {
   ctx.imageSmoothingEnabled = true;
   ctx.drawImage(tmp, 0, 0, w, h);
 
-  // Contour lines via proper marching squares
+  // Contour lines via marching squares
   const numLevels = 20;
   const levels = [];
   for (let i = 0; i < numLevels; i++) {
-    // Generate levels in shifted-log space, then convert back to original values
     const shiftedLevel = Math.exp(logMin + (i+1)/(numLevels+1) * (logMax - logMin));
     levels.push(shiftedLevel - shift);
   }
 
-  // Precompute a coarser grid for marching squares (faster + smoother)
-  const gs = 2; // grid step in pixels of the vals array
+  const gs = 2;
   const gcw = Math.floor((cw - 1) / gs);
   const gch = Math.floor((ch - 1) / gs);
-
   function gval(gi, gj) { return vals[gj * gs * cw + gi * gs]; }
-
-  // Interpolation helper: fraction along edge where level crosses
   function lerp(va, vb, lev) { return (lev - va) / (vb - va); }
 
   ctx.strokeStyle = 'rgba(200,215,240,0.18)';
@@ -709,49 +921,50 @@ function drawContours(ctx, canvas) {
 
   for (const lev of levels) {
     ctx.beginPath();
-
     for (let gj = 0; gj < gch; gj++) {
       for (let gi = 0; gi < gcw; gi++) {
-        // Four corners: TL(00), TR(10), BR(11), BL(01)
-        const v00 = gval(gi, gj);
-        const v10 = gval(gi+1, gj);
-        const v11 = gval(gi+1, gj+1);
-        const v01 = gval(gi, gj+1);
-
-        // Marching squares case index (4-bit)
+        const v00 = gval(gi, gj), v10 = gval(gi+1, gj);
+        const v11 = gval(gi+1, gj+1), v01 = gval(gi, gj+1);
         const c = (v00 >= lev ? 8 : 0) | (v10 >= lev ? 4 : 0)
                 | (v11 >= lev ? 2 : 0) | (v01 >= lev ? 1 : 0);
         if (c === 0 || c === 15) continue;
-
-        // Pixel coords of corners
         const x0 = gi * gs * res, x1 = (gi+1) * gs * res;
         const y0 = gj * gs * res, y1 = (gj+1) * gs * res;
-
-        // Interpolated edge midpoints
-        // Top edge (00→10), Right edge (10→11), Bottom edge (01→11), Left edge (00→01)
         const tX = x0 + lerp(v00, v10, lev) * (x1 - x0), tY = y0;
         const rX = x1, rY = y0 + lerp(v10, v11, lev) * (y1 - y0);
         const bX = x0 + lerp(v01, v11, lev) * (x1 - x0), bY = y1;
         const lX = x0, lY = y0 + lerp(v00, v01, lev) * (y1 - y0);
-
-        // Draw line segments for each marching squares case
         switch (c) {
           case 1: case 14: ctx.moveTo(lX,lY); ctx.lineTo(bX,bY); break;
           case 2: case 13: ctx.moveTo(bX,bY); ctx.lineTo(rX,rY); break;
           case 3: case 12: ctx.moveTo(lX,lY); ctx.lineTo(rX,rY); break;
           case 4: case 11: ctx.moveTo(tX,tY); ctx.lineTo(rX,rY); break;
-          case 5:  // saddle
-            ctx.moveTo(lX,lY); ctx.lineTo(tX,tY);
-            ctx.moveTo(bX,bY); ctx.lineTo(rX,rY); break;
+          case 5: ctx.moveTo(lX,lY); ctx.lineTo(tX,tY);
+                  ctx.moveTo(bX,bY); ctx.lineTo(rX,rY); break;
           case 6: case 9: ctx.moveTo(tX,tY); ctx.lineTo(bX,bY); break;
           case 7: case 8: ctx.moveTo(lX,lY); ctx.lineTo(tX,tY); break;
-          case 10: // saddle
-            ctx.moveTo(tX,tY); ctx.lineTo(rX,rY);
-            ctx.moveTo(lX,lY); ctx.lineTo(bX,bY); break;
+          case 10: ctx.moveTo(tX,tY); ctx.lineTo(rX,rY);
+                   ctx.moveTo(lX,lY); ctx.lineTo(bX,bY); break;
         }
       }
     }
     ctx.stroke();
+  }
+
+  // Draw constraint set Q (only in MGC mode)
+  if (mode === 'mgc') {
+    const r = getRadius();
+    const wToC = (wx, wy) => worldToCanvas(wx, wy, canvas);
+    ctx.save();
+    cst().drawPath(ctx, canvas, r, wToC);
+    ctx.fillStyle = 'rgba(192,132,252,0.06)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(192,132,252,0.5)';
+    ctx.lineWidth = 2 * devicePixelRatio;
+    ctx.setLineDash([6 * devicePixelRatio, 4 * devicePixelRatio]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
   }
 
   // Axes
@@ -783,21 +996,39 @@ function drawContours(ctx, canvas) {
   // Optimum
   const xs = fnObj.xstar;
   const [ox, oy] = worldToCanvas(xs[0], xs[1], canvas);
-  ctx.fillStyle = '#ffd166';
-  ctx.shadowColor = 'rgba(255,209,102,0.6)';
-  ctx.shadowBlur = 10*devicePixelRatio;
-  ctx.beginPath(); ctx.arc(ox, oy, 4.5*devicePixelRatio, 0, 2*Math.PI); ctx.fill();
-  ctx.shadowBlur = 0;
-  ctx.font = `${9*devicePixelRatio}px JetBrains Mono`;
-  ctx.fillStyle = '#ffd166';
-  ctx.textAlign = 'left';
-  ctx.fillText('x*', ox + 7*devicePixelRatio, oy - 5*devicePixelRatio);
+  if (ox >= 0 && ox <= w && oy >= 0 && oy <= h) {
+    ctx.fillStyle = '#ffd166';
+    ctx.shadowColor = 'rgba(255,209,102,0.6)';
+    ctx.shadowBlur = 10*devicePixelRatio;
+    ctx.beginPath(); ctx.arc(ox, oy, 4.5*devicePixelRatio, 0, 2*Math.PI); ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.font = `${9*devicePixelRatio}px JetBrains Mono`;
+    ctx.fillStyle = '#ffd166';
+    ctx.textAlign = 'left';
+    ctx.fillText('x*', ox + 7*devicePixelRatio, oy - 5*devicePixelRatio);
+  }
 }
 
 function drawPath(ctx, canvas, pathSlice) {
   if (pathSlice.length < 1) return;
   const clr = mode === 'sgd' ? '#ff6b6b' : '#00e5a0';
   const glow = mode === 'sgd' ? 'rgba(255,107,107,0.4)' : 'rgba(0,229,160,0.4)';
+
+  // Draw FW direction arrows in MGC mode
+  if (mode === 'mgc' && fwVertices.length > 0) {
+    ctx.save();
+    ctx.globalAlpha = 0.25;
+    ctx.strokeStyle = '#c084fc';
+    ctx.lineWidth = 1 * devicePixelRatio;
+    ctx.setLineDash([3 * devicePixelRatio, 3 * devicePixelRatio]);
+    for (let i = 0; i < Math.min(pathSlice.length - 1, fwVertices.length); i++) {
+      const [px, py] = worldToCanvas(pathSlice[i][0], pathSlice[i][1], canvas);
+      const [vx, vy] = worldToCanvas(fwVertices[i][0], fwVertices[i][1], canvas);
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(vx, vy); ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    ctx.restore();
+  }
 
   // Line
   ctx.strokeStyle = clr;
@@ -810,6 +1041,17 @@ function drawPath(ctx, canvas, pathSlice) {
   }
   ctx.stroke();
   ctx.globalAlpha = 1;
+
+  // FW vertex dots (MGC mode only)
+  if (mode === 'mgc' && fwVertices.length > 0) {
+    for (let i = 0; i < Math.min(pathSlice.length - 1, fwVertices.length); i++) {
+      const [vx, vy] = worldToCanvas(fwVertices[i][0], fwVertices[i][1], canvas);
+      ctx.fillStyle = '#c084fc';
+      ctx.globalAlpha = 0.5;
+      ctx.beginPath(); ctx.arc(vx, vy, 2*devicePixelRatio, 0, 2*Math.PI); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+  }
 
   // Dots
   for (let i = 0; i < pathSlice.length; i++) {
@@ -839,17 +1081,39 @@ function drawConvergence(ctx, canvas, fHistSlice) {
     return;
   }
 
-  const fStar = fn().f(fn().xstar[0], fn().xstar[1], fnP());
+  // Compute f*
+  const fnObj = fn();
+  const p = fnP();
+  let fStar;
+  if (mode === 'mgc') {
+    const r = getRadius();
+    const xs = fnObj.xstar;
+    if (cst().contains(xs[0], xs[1], r)) {
+      fStar = fnObj.f(xs[0], xs[1], p);
+    } else {
+      const [px, py] = cst().project(xs[0], xs[1], r);
+      fStar = fnObj.f(px, py, p);
+      fStar = Math.min(fStar, ...fHistSlice);
+    }
+  } else {
+    fStar = fnObj.f(fnObj.xstar[0], fnObj.xstar[1], p);
+  }
+
   const gaps = fHistSlice.map(v => Math.max(v - fStar, 1e-18));
   const logGaps = gaps.map(v => Math.log10(v));
+
+  // Also plot duality gap in MGC mode
+  const showDualGap = mode === 'mgc' && gapHist.length > 0;
+  const gapSlice = showDualGap ? gapHist.slice(0, fHistSlice.length) : [];
+  const logDualGap = gapSlice.map(v => Math.log10(Math.max(v, 1e-18)));
 
   const pad = { l: 52*devicePixelRatio, r: 16*devicePixelRatio, t: 16*devicePixelRatio, b: 34*devicePixelRatio };
   const pw = w - pad.l - pad.r;
   const ph = h - pad.t - pad.b;
 
-  const finiteLog = logGaps.filter(v => isFinite(v));
-  let yMin = finiteLog.length > 0 ? Math.floor(Math.min(...finiteLog)) - 0.5 : -10;
-  let yMax = finiteLog.length > 0 ? Math.ceil(Math.max(...finiteLog)) + 0.5 : 5;
+  const allLog = [...logGaps.filter(v => isFinite(v)), ...logDualGap.filter(v => isFinite(v))];
+  let yMin = allLog.length > 0 ? Math.floor(Math.min(...allLog)) - 0.5 : -10;
+  let yMax = allLog.length > 0 ? Math.ceil(Math.max(...allLog)) + 0.5 : 5;
   if (yMax - yMin < 2) { yMin -= 1; yMax += 1; }
   const xMax = fHistSlice.length - 1;
 
@@ -873,12 +1137,12 @@ function drawConvergence(ctx, canvas, fHistSlice) {
   }
   ctx.fillText('iteration k', pad.l + pw/2, h - 1*devicePixelRatio);
 
-  // Curve
-  const clr = mode === 'sgd' ? '#ff6b6b' : '#00e5a0';
-  const glowClr = mode === 'sgd' ? 'rgba(255,107,107,0.3)' : 'rgba(0,229,160,0.3)';
-  ctx.strokeStyle = clr;
+  // f(xᵏ) − f* curve
+  const curveClr = mode === 'sgd' ? '#ff6b6b' : '#00e5a0';
+  const curveGlow = mode === 'sgd' ? 'rgba(255,107,107,0.3)' : 'rgba(0,229,160,0.3)';
+  ctx.strokeStyle = curveClr;
   ctx.lineWidth = 2*devicePixelRatio;
-  ctx.shadowColor = glowClr;
+  ctx.shadowColor = curveGlow;
   ctx.shadowBlur = 5*devicePixelRatio;
   ctx.beginPath();
   for (let i = 0; i < logGaps.length; i++) {
@@ -891,6 +1155,26 @@ function drawConvergence(ctx, canvas, fHistSlice) {
   ctx.stroke();
   ctx.shadowBlur = 0;
 
+  // Duality gap curve (MGC only)
+  if (showDualGap) {
+    ctx.strokeStyle = '#c084fc';
+    ctx.lineWidth = 1.5*devicePixelRatio;
+    ctx.shadowColor = 'rgba(192,132,252,0.3)';
+    ctx.shadowBlur = 4*devicePixelRatio;
+    ctx.setLineDash([4*devicePixelRatio, 3*devicePixelRatio]);
+    ctx.beginPath();
+    for (let i = 0; i < logDualGap.length; i++) {
+      if (!isFinite(logDualGap[i])) continue;
+      const px = pad.l + (i/Math.max(xMax,1)) * pw;
+      const py = pad.t + (1 - (logDualGap[i] - yMin)/(yMax - yMin)) * ph;
+      const cpy = Math.max(pad.t, Math.min(pad.t + ph, py));
+      if (i === 0) ctx.moveTo(px, cpy); else ctx.lineTo(px, cpy);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.shadowBlur = 0;
+  }
+
   // Y label
   ctx.save();
   ctx.translate(10*devicePixelRatio, pad.t + ph/2);
@@ -902,22 +1186,25 @@ function drawConvergence(ctx, canvas, fHistSlice) {
   ctx.restore();
 
   // Mode label
-  ctx.fillStyle = clr;
   ctx.font = `bold ${10*devicePixelRatio}px JetBrains Mono`;
   ctx.textAlign = 'right';
-  ctx.fillText(mode === 'sgd' ? 'SGD' : 'GD', w - pad.r, pad.t + 12*devicePixelRatio);
+  const modeLabel = mode === 'sgd' ? 'SGD' : mode === 'mgc' ? 'FW' : 'GD';
+  ctx.fillStyle = curveClr;
+  ctx.fillText(modeLabel, w - pad.r, pad.t + 12*devicePixelRatio);
+  if (showDualGap) {
+    ctx.fillStyle = '#c084fc';
+    ctx.fillText('--- gap', w - pad.r, pad.t + 24*devicePixelRatio);
+  }
 }
 
 // =====================================================================
-// OPTIMIZATION ENGINE
+// LINE SEARCH HELPERS
 // =====================================================================
 function exactLineSearch2D(x, y, gx, gy) {
-  // Golden section on f(x - alpha*g)
   let a = 0, b = 1;
   const phi = (1 + Math.sqrt(5)) / 2;
   const p = fnP();
   const fLine = (alpha) => fn().f(x - alpha*gx, y - alpha*gy, p);
-  // Expand b until bracket
   while (fLine(b) < fLine(a) && b < 100) b *= 2;
   for (let i = 0; i < 50; i++) {
     const x1 = b - (b-a)/phi;
@@ -941,22 +1228,50 @@ function backtrack(x, y, gx, gy) {
   return alpha;
 }
 
+function lineSearchFW(x, y, sx, sy) {
+  const dx = sx - x, dy = sy - y;
+  const p = fnP();
+  const fLine = (a) => fn().f(x + a*dx, y + a*dy, p);
+  let a = 0, b = 1;
+  const phi = (1 + Math.sqrt(5)) / 2;
+  for (let i = 0; i < 50; i++) {
+    const x1 = b - (b-a)/phi;
+    const x2 = a + (b-a)/phi;
+    if (fLine(x1) < fLine(x2)) b = x2; else a = x1;
+  }
+  return (a+b)/2;
+}
+
+// =====================================================================
+// OPTIMIZATION ENGINE
+// =====================================================================
 function runOptimizer() {
   const maxIter = parseInt(document.getElementById('maxIterSlider').value);
   const fnObj = fn();
   const p = fnP();
   const eps = 1e-12;
 
-  path = [[...startPt]];
-  fHist = [fnObj.f(startPt[0], startPt[1], p)];
-  alphaHist = [];
-
   let x = startPt[0], y = startPt[1];
+
+  // In MGC mode, ensure feasibility
+  if (mode === 'mgc') {
+    const r = getRadius();
+    if (!cst().contains(x, y, r)) {
+      [x, y] = cst().project(x, y, r);
+    }
+  }
+
+  path = [[x, y]];
+  fHist = [fnObj.f(x, y, p)];
+  alphaHist = [];
+  gapHist = [];
+  fwVertices = [];
 
   if (mode === 'sgd') buildSGDComponents();
 
   const decay = parseFloat(document.getElementById('decaySlider').value);
   const baseAlpha = parseFloat(document.getElementById('alphaSlider').value);
+  const mgcAlpha = parseFloat(document.getElementById('mgcAlphaSlider').value);
 
   for (let k = 0; k < maxIter; k++) {
     let gx, gy, alpha;
@@ -965,27 +1280,46 @@ function runOptimizer() {
       [gx, gy] = fnObj.grad(x, y, p);
       const gn = Math.sqrt(gx*gx + gy*gy);
       if (gn < eps) break;
+      if (strategy === 'fixed') alpha = baseAlpha;
+      else if (strategy === 'exact') alpha = exactLineSearch2D(x, y, gx, gy);
+      else alpha = backtrack(x, y, gx, gy);
+      x = x - alpha * gx;
+      y = y - alpha * gy;
 
-      if (strategy === 'fixed') {
-        alpha = baseAlpha;
-      } else if (strategy === 'exact') {
-        alpha = exactLineSearch2D(x, y, gx, gy);
-      } else {
-        alpha = backtrack(x, y, gx, gy);
-      }
-    } else {
-      // SGD
+    } else if (mode === 'sgd') {
       [gx, gy] = stochGrad(x, y);
       alpha = baseAlpha / (1 + k / decay);
+      x = x - alpha * gx;
+      y = y - alpha * gy;
+
+    } else {
+      // MGC (Frank-Wolfe / Conditional Gradient)
+      const r = getRadius();
+      [gx, gy] = fnObj.grad(x, y, p);
+
+      // LMO: φ_Q(xᵏ) = argmin_{z∈Q} ∇f(xᵏ)ᵀz
+      const [sx, sy] = cst().lmo(gx, gy, r);
+      fwVertices.push([sx, sy]);
+
+      // Duality gap
+      const gap = gx*(x - sx) + gy*(y - sy);
+      gapHist.push(gap);
+      if (gap < eps) break;
+
+      // Step size
+      if (mgcStrategy === 'standard') alpha = 2.0 / (k + 2);
+      else if (mgcStrategy === 'fixed') alpha = mgcAlpha;
+      else alpha = lineSearchFW(x, y, sx, sy);
+
+      // Update: xᵏ⁺¹ = xᵏ + αₖ(φ_Q(xᵏ) − xᵏ)
+      x = x + alpha * (sx - x);
+      y = y + alpha * (sy - y);
     }
 
-    x = x - alpha * gx;
-    y = y - alpha * gy;
     path.push([x, y]);
     fHist.push(fnObj.f(x, y, p));
     alphaHist.push(alpha);
 
-    // Divergence
     if (!isFinite(x) || !isFinite(y) || Math.abs(x) > 1e6 || Math.abs(y) > 1e6) break;
   }
 }
@@ -1016,6 +1350,12 @@ function updateStats(idx) {
     const g = fn().grad(path[idx][0], path[idx][1], p);
     document.getElementById('statGrad').textContent = Math.sqrt(g[0]**2+g[1]**2).toExponential(3);
   }
+
+  if (mode === 'mgc') {
+    document.getElementById('statGap').textContent =
+      gapHist[idx] !== undefined ? gapHist[idx].toExponential(3) : '—';
+  }
+
   document.getElementById('statAlpha').textContent =
     alphaHist[idx-1] !== undefined ? alphaHist[idx-1].toFixed(6) : '—';
 
@@ -1024,10 +1364,16 @@ function updateStats(idx) {
     document.getElementById('statStatus').textContent = 'DIVERGED ✗';
     document.getElementById('statStatus').style.color = '#ff6b6b';
   } else if (idx >= path.length - 1 && path.length > 1) {
-    const g = fn().grad(last[0], last[1], p);
-    const gn = Math.sqrt(g[0]**2+g[1]**2);
-    document.getElementById('statStatus').textContent = gn < 1e-4 ? 'Converged ✓' : 'Max iter reached';
-    document.getElementById('statStatus').style.color = gn < 1e-4 ? '#00e5a0' : '#ffd166';
+    if (mode === 'mgc') {
+      const gap = gapHist[gapHist.length - 1] || Infinity;
+      document.getElementById('statStatus').textContent = gap < 1e-4 ? 'Converged ✓' : 'Max iter reached';
+      document.getElementById('statStatus').style.color = gap < 1e-4 ? '#00e5a0' : '#ffd166';
+    } else {
+      const g = fn().grad(last[0], last[1], p);
+      const gn = Math.sqrt(g[0]**2+g[1]**2);
+      document.getElementById('statStatus').textContent = gn < 1e-4 ? 'Converged ✓' : 'Max iter reached';
+      document.getElementById('statStatus').style.color = gn < 1e-4 ? '#00e5a0' : '#ffd166';
+    }
   } else {
     document.getElementById('statStatus').textContent = 'Running…';
     document.getElementById('statStatus').style.color = '#61afff';
@@ -1041,33 +1387,108 @@ function updateFormulaBar() {
   const fnObj = fn();
   const p = fnP();
   document.getElementById('formulaDisplay').textContent = fnObj.expr;
-  document.getElementById('propL').textContent = p.L ? p.L.toFixed(1) : '≈' + (p.L||'?');
-  document.getElementById('propSigma').textContent = fnObj.usesKappa ? (p.sig||1).toFixed(2) : '—';
-  const kappa = parseInt(document.getElementById('condSlider').value);
-  document.getElementById('propKappa').textContent = fnObj.usesKappa ? kappa : '—';
   document.getElementById('propXstar').textContent = `(${fnObj.xstar[0]}, ${fnObj.xstar[1]})`;
-  document.getElementById('infoBox').innerHTML = fnObj.info;
+
+  if (mode === 'mgc') {
+    document.getElementById('propL').parentElement.style.display = 'none';
+    document.getElementById('propSigma').parentElement.style.display = 'none';
+    document.getElementById('propKappa').parentElement.style.display = 'none';
+    document.getElementById('propQWrap').style.display = '';
+    document.getElementById('propRWrap').style.display = '';
+    document.getElementById('propQ').textContent = cst().label;
+    document.getElementById('propR').textContent = getRadius().toFixed(1);
+  } else {
+    document.getElementById('propL').parentElement.style.display = '';
+    document.getElementById('propSigma').parentElement.style.display = '';
+    document.getElementById('propKappa').parentElement.style.display = '';
+    document.getElementById('propQWrap').style.display = 'none';
+    document.getElementById('propRWrap').style.display = 'none';
+    document.getElementById('propL').textContent = p.L ? p.L.toFixed(1) : '≈' + (p.L||'?');
+    document.getElementById('propSigma').textContent = fnObj.usesKappa ? (p.sig||1).toFixed(2) : '—';
+    const kappa = parseInt(document.getElementById('condSlider').value);
+    document.getElementById('propKappa').textContent = fnObj.usesKappa ? kappa : '—';
+  }
+
+  // Info box (per-mode text)
+  const info = fnObj.info;
+  document.getElementById('infoBox').innerHTML = typeof info === 'string' ? info : (info[mode] || info.gd);
 }
 
 function updateModeUI() {
   const isGD = mode === 'gd';
-  document.getElementById('strategyGroup').style.display = isGD ? '' : 'none';
-  document.getElementById('sgdParams').style.display = isGD ? 'none' : '';
+  const isSGD = mode === 'sgd';
+  const isMGC = mode === 'mgc';
 
-  // In SGD mode, always show alpha slider (it becomes α₀)
-  document.getElementById('alphaRow').style.display = '';
-  if (!isGD) {
+  // Show/hide mode-specific control groups
+  document.getElementById('strategyGroup').style.display = isGD ? '' : 'none';
+  document.getElementById('sgdParams').style.display = isSGD ? '' : 'none';
+  document.getElementById('constraintGroup').style.display = isMGC ? '' : 'none';
+  document.getElementById('mgcStrategyGroup').style.display = isMGC ? '' : 'none';
+  document.getElementById('radiusRow').style.display = isMGC ? '' : 'none';
+
+  // Alpha slider logic
+  if (isMGC) {
+    document.getElementById('alphaRow').style.display = 'none';
     document.getElementById('cRow').style.display = 'none';
     document.getElementById('rhoRow').style.display = 'none';
+    document.getElementById('mgcAlphaRow').style.display = mgcStrategy === 'fixed' ? '' : 'none';
   } else {
-    updateStrategyUI();
+    document.getElementById('mgcAlphaRow').style.display = 'none';
+    if (isSGD) {
+      document.getElementById('alphaRow').style.display = '';
+      document.getElementById('cRow').style.display = 'none';
+      document.getElementById('rhoRow').style.display = 'none';
+      const alphaLabel = document.querySelector('#alphaRow label');
+      alphaLabel.innerHTML = `Initial step α₀ <span id="alphaVal">${parseFloat(document.getElementById('alphaSlider').value).toFixed(4)}</span>`;
+    } else {
+      const alphaLabel = document.querySelector('#alphaRow label');
+      alphaLabel.innerHTML = `Step size α <span id="alphaVal">${parseFloat(document.getElementById('alphaSlider').value).toFixed(4)}</span>`;
+      updateStrategyUI();
+    }
   }
 
-  // Update alpha label
-  const alphaLabel = document.querySelector('#alphaRow label');
-  alphaLabel.innerHTML = isGD
-    ? `Step size α <span id="alphaVal">${parseFloat(document.getElementById('alphaSlider').value).toFixed(4)}</span>`
-    : `Initial step α₀ <span id="alphaVal">${parseFloat(document.getElementById('alphaSlider').value).toFixed(4)}</span>`;
+  // Duality gap row
+  document.getElementById('statGapRow').style.display = isMGC ? '' : 'none';
+
+  // Labels
+  document.getElementById('contourLabel').textContent = isMGC
+    ? 'Contour Plot + Constraint Set Q + Iterates'
+    : 'Contour Plot + Iterates';
+  document.getElementById('convLabel').textContent = isMGC
+    ? 'Convergence: f(xᵏ) − f* & Duality Gap'
+    : 'Convergence: f(xᵏ) − f*';
+  document.getElementById('clickHint').textContent = isMGC
+    ? 'Click inside Q to set x⁰'
+    : 'Click to set x⁰';
+
+  // Legend
+  const legend = document.getElementById('legendArea');
+  if (isMGC) {
+    legend.innerHTML = `
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent1)"></div> Iterates xᵏ</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div> Starting x⁰</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent5)"></div> FW vertex φ_Q(xᵏ)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent4)"></div> Optimum x*</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(192,132,252,0.15);border:1px solid var(--accent5)"></div> Constraint set Q</div>`;
+  } else {
+    legend.innerHTML = `
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent1)"></div> Iterates xᵏ</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div> Starting x⁰</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent4)"></div> Optimum x*</div>`;
+  }
+
+  // Set reasonable starting point
+  if (isMGC) {
+    const r = getRadius();
+    if (constraintType === 'simplex') startPt = [r * 0.3, r * 0.2];
+    else startPt = [r * 0.5, -r * 0.3];
+  } else {
+    const v = fn().view;
+    startPt = [v.xmin + (v.xmax-v.xmin)*0.2, v.ymin + (v.ymax-v.ymin)*0.75];
+  }
+
+  updateFormulaBar();
+  resetVis();
 }
 
 function updateStrategyUI() {
@@ -1088,13 +1509,16 @@ function buildFnList() {
       currentFnIdx = i;
       document.querySelectorAll('.fn-card').forEach(c => c.classList.remove('active'));
       card.classList.add('active');
-
-      // Update kappa slider visibility
       document.getElementById('condRow').style.display = fnDef.usesKappa ? '' : 'none';
 
-      // Reset start to a reasonable point
-      const v = fnDef.view;
-      startPt = [v.xmin + (v.xmax-v.xmin)*0.2, v.ymin + (v.ymax-v.ymin)*0.75];
+      if (mode === 'mgc') {
+        const r = getRadius();
+        if (constraintType === 'simplex') startPt = [r * 0.3, r * 0.2];
+        else startPt = [r * 0.5, -r * 0.3];
+      } else {
+        const v = fnDef.view;
+        startPt = [v.xmin + (v.xmax-v.xmin)*0.2, v.ymin + (v.ymax-v.ymin)*0.75];
+      }
 
       updateFormulaBar();
       resetVis();
@@ -1105,8 +1529,17 @@ function buildFnList() {
 
 function resetVis() {
   if (animFrame) cancelAnimationFrame(animFrame);
-  path = []; fHist = []; alphaHist = []; animIdx = 0;
+  path = []; fHist = []; alphaHist = []; gapHist = []; fwVertices = []; animIdx = 0;
   drawContours(ctxC, cC);
+
+  // Ensure start is feasible in MGC mode
+  if (mode === 'mgc') {
+    const r = getRadius();
+    if (!cst().contains(startPt[0], startPt[1], r)) {
+      startPt = cst().project(startPt[0], startPt[1], r);
+    }
+  }
+
   // Show starting point preview
   const [px, py] = worldToCanvas(startPt[0], startPt[1], cC);
   ctxC.fillStyle = '#ff6b6b';
@@ -1118,6 +1551,7 @@ function resetVis() {
   document.getElementById('statIter').textContent = '—';
   document.getElementById('statF').textContent = '—';
   document.getElementById('statGrad').textContent = '—';
+  document.getElementById('statGap').textContent = '—';
   document.getElementById('statAlpha').textContent = '—';
   document.getElementById('statStatus').textContent = 'Ready';
   document.getElementById('statStatus').style.color = '';
@@ -1130,21 +1564,47 @@ function resetVis() {
 document.querySelectorAll('#modeToggle .toggle-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('#modeToggle .toggle-btn').forEach(b => {
-      b.classList.remove('active', 'active-sgd');
+      b.classList.remove('active', 'active-sgd', 'active-mgc');
     });
     mode = btn.dataset.mode;
-    btn.classList.add(mode === 'sgd' ? 'active-sgd' : 'active');
+    if (mode === 'sgd') btn.classList.add('active-sgd');
+    else if (mode === 'mgc') btn.classList.add('active-mgc');
+    else btn.classList.add('active');
     updateModeUI();
   });
 });
 
-// Strategy
-document.querySelectorAll('.strategy-btn').forEach(btn => {
+// GD Strategy
+document.querySelectorAll('#strategyGroup .strategy-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.strategy-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#strategyGroup .strategy-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     strategy = btn.dataset.s;
     updateStrategyUI();
+  });
+});
+
+// Constraint set buttons
+document.querySelectorAll('#constraintBtns .constraint-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#constraintBtns .constraint-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    constraintType = btn.dataset.q;
+    const r = getRadius();
+    if (constraintType === 'simplex') startPt = [r * 0.3, r * 0.2];
+    else startPt = [r * 0.5, -r * 0.3];
+    updateFormulaBar();
+    resetVis();
+  });
+});
+
+// MGC step-size strategy buttons
+document.querySelectorAll('#mgcStepBtns .strategy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#mgcStepBtns .strategy-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    mgcStrategy = btn.dataset.ms;
+    document.getElementById('mgcAlphaRow').style.display = mgcStrategy === 'fixed' ? '' : 'none';
   });
 });
 
@@ -1175,6 +1635,17 @@ document.getElementById('decaySlider').addEventListener('input', e => {
 document.getElementById('sampSlider').addEventListener('input', e => {
   document.getElementById('sampVal').textContent = e.target.value;
 });
+document.getElementById('radiusSlider').addEventListener('input', e => {
+  document.getElementById('radiusVal').textContent = parseFloat(e.target.value).toFixed(2);
+  const r = parseFloat(e.target.value);
+  if (constraintType === 'simplex') startPt = [r * 0.3, r * 0.2];
+  else startPt = [r * 0.5, -r * 0.3];
+  updateFormulaBar();
+  resetVis();
+});
+document.getElementById('mgcAlphaSlider').addEventListener('input', e => {
+  document.getElementById('mgcAlphaVal').textContent = parseFloat(e.target.value).toFixed(2);
+});
 
 // Buttons
 document.getElementById('runBtn').addEventListener('click', () => {
@@ -1199,10 +1670,18 @@ document.getElementById('resetBtn').addEventListener('click', resetVis);
 // Click to set starting point
 cC.addEventListener('click', e => {
   const [wx, wy] = canvasToWorld(e.clientX, e.clientY, cC);
-  const v = getView();
-  if (wx >= v.xmin && wx <= v.xmax && wy >= v.ymin && wy <= v.ymax) {
-    startPt = [wx, wy];
-    resetVis();
+  if (mode === 'mgc') {
+    const r = getRadius();
+    if (cst().contains(wx, wy, r)) {
+      startPt = [wx, wy];
+      resetVis();
+    }
+  } else {
+    const v = getView();
+    if (wx >= v.xmin && wx <= v.xmax && wy >= v.ymin && wy <= v.ymax) {
+      startPt = [wx, wy];
+      resetVis();
+    }
   }
 });
 
