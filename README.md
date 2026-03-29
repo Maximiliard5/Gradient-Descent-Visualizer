@@ -39,7 +39,7 @@ No installation required. Everything runs in a single HTML file, entirely in the
 |---|---|
 | **αₖ = 2/(k+2)** | The classical Frank-Wolfe step size; guarantees O(1/k) convergence for convex f |
 | **Fixed α** | Constant step size in [0, 1] |
-| **Line search on [0, 1]** | Minimizes `f(xᵏ + α(φ_Q(xᵏ) − xᵏ))` over α ∈ [0, 1] via golden section |
+| **Line search on [0, 1]** | Minimizes $f(xᵏ + α(φ_Q(xᵏ) − xᵏ))$ over α ∈ [0, 1] via golden section |
 
 ### Constraint Sets (Conditional Gradient mode)
 
