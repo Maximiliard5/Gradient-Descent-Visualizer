@@ -45,27 +45,27 @@ No installation required. Everything runs in a single HTML file, entirely in the
 
 | Set | Definition | LMO solution |
 |---|---|---|
-| **L₂ ball** | `‖x‖₂ ≤ r` | `−r · ∇f / ‖∇f‖` (normalized negative gradient) |
-| **L₁ ball (diamond)** | `‖x‖₁ ≤ r` | `−r · sign(gᵢ) · eᵢ` for `i = argmax \|gᵢ\|` — always a vertex, promotes sparsity |
-| **L∞ ball (box)** | `‖x‖∞ ≤ r` | `−r · sign(g)` componentwise — always a corner |
-| **Simplex** | `x ≥ 0, x₁+x₂ ≤ r` | Best vertex among `{0, r·e₁, r·e₂}` — extreme sparsity |
+| **L₂ ball** | $‖x‖₂ ≤ r` | `−r · ∇f / ‖∇f‖$ (normalized negative gradient) |
+| **L₁ ball (diamond)** | $‖x‖₁ ≤ r$ | $−r · sign(gᵢ) · eᵢ$ for $i = argmax \|gᵢ\|$ — always a vertex, promotes sparsity |
+| **L∞ ball (box)** | $‖x‖∞ ≤ r$ | $−r · sign(g)$ componentwise — always a corner |
+| **Simplex** | $x ≥ 0, x₁+x₂ ≤ r$ | Best vertex among ${0, r·e₁, r·e₂}$ — extreme sparsity |
 
 ### Objective Functions
 
 | Function | Expression | Key property |
 |---|---|---|
-| **Quadratic (diagonal)** | `½(κ x₁² + x₂²)` | Condition number κ directly controls ellipse elongation and GD zig-zagging |
-| **Quadratic (rotated)** | `½ xᵀ(RᵀΛR)x`, 45° rotation | Same spectrum, axis-misaligned — reveals coordinate vs. eigenvector directions |
-| **Rosenbrock** | `100(x₂ − x₁²)² + (1 − x₁)²` | Narrow curved valley; GD finds it quickly but crawls along it |
-| **Beale** | `Σ (cᵢ − x₁(1 − x₂ⁱ))²` | Flat regions slow gradient methods; good for comparing line-search strategies |
-| **Himmelblau** | `(x₁² + x₂ − 11)² + (x₁ + x₂² − 7)²` | Four equal minima — starting point determines which one GD finds |
-| **Styblinski-Tang** | `½ Σᵢ (xᵢ⁴ − 16xᵢ² + 5xᵢ)` | Multiple local minima; SGD noise can occasionally help escape shallow basins |
-| **Shifted Quadratic** | `½((x₁−3)² + (x₂−2)²)` | Minimum at (3, 2) — lies outside small constraint sets, ideal for demonstrating constrained optimization |
+| **Quadratic (diagonal)** | $½(κ x₁² + x₂²)$ | Condition number κ directly controls ellipse elongation and GD zig-zagging |
+| **Quadratic (rotated)** | $½ xᵀ(RᵀΛR)x$, 45° rotation | Same spectrum, axis-misaligned — reveals coordinate vs. eigenvector directions |
+| **Rosenbrock** | $100(x₂ − x₁²)² + (1 − x₁)²$ | Narrow curved valley; GD finds it quickly but crawls along it |
+| **Beale** | $Σ (cᵢ − x₁(1 − x₂ⁱ))²$ | Flat regions slow gradient methods; good for comparing line-search strategies |
+| **Himmelblau** | $(x₁² + x₂ − 11)² + (x₁ + x₂² − 7)²$ | Four equal minima — starting point determines which one GD finds |
+| **Styblinski-Tang** | $½ Σᵢ (xᵢ⁴ − 16xᵢ² + 5xᵢ)$ | Multiple local minima; SGD noise can occasionally help escape shallow basins |
+| **Shifted Quadratic** | $½((x₁−3)² + (x₂−2)²)$ | Minimum at (3, 2) — lies outside small constraint sets, ideal for demonstrating constrained optimization |
 
 ### Interface
 
 - **Left panel — Contour Plot**: shows level curves of f and the trajectory of xᵏ. In Conditional Gradient mode, the constraint set Q is drawn as a purple dashed region, and dotted lines show the FW direction from each iterate to its LMO vertex. Click the plot to set a new starting point x⁰ (must be inside Q in Conditional Gradient mode).
-- **Right panel — Convergence Plot**: plots `f(xᵏ) − f*` over iterations on a log scale. In Conditional Gradient mode, the **duality gap** `gₖ = ∇f(xᵏ)ᵀ(xᵏ − φ_Q(xᵏ))` is plotted as a second curve — this is a computable convergence certificate that doesn't require knowing f*.
+- **Right panel — Convergence Plot**: plots $f(xᵏ) − f*$ over iterations on a log scale. In Conditional Gradient mode, the **duality gap** $gₖ = ∇f(xᵏ)ᵀ(xᵏ − φ_Q(xᵏ))$ is plotted as a second curve — this is a computable convergence certificate that doesn't require knowing f*.
 - **Sidebar**: controls for method, function, step-size strategy, constraint set and radius (Conditional Gradient mode), all hyperparameters, run/step/reset buttons, and a live statistics readout (current iteration, f(xᵏ), ‖∇f(xᵏ)‖, duality gap, αₖ, and convergence status).
 - **Formula bar**: displays the active objective, its key properties, and (in Conditional Gradient mode) the constraint set and radius.
 - **Info box**: context-sensitive explanation that adapts its content to the selected method and function.
@@ -76,7 +76,7 @@ No installation required. Everything runs in a single HTML file, entirely in the
 
 ### Gradient Descent
 
-1. **Condition number and convergence rate** — select the diagonal quadratic, fix α = 2/(L+σ), and sweep κ from 1 to 200. Observe how the convergence rate `((κ−1)/(κ+1))²` per iteration degrades.
+1. **Condition number and convergence rate** — select the diagonal quadratic, fix α = 2/(L+σ), and sweep κ from 1 to 200. Observe how the convergence rate $((κ−1)/(κ+1))²$ per iteration degrades.
 2. **Divergence boundary** — push α past 2/L on the quadratic and watch the iterates explode.
 3. **Backtracking robustness** — switch to Rosenbrock with a large initial step; see how Armijo automatically adapts.
 4. **Initialization sensitivity** — on Himmelblau, click the four different basins and confirm GD converges to a different minimum each time.
