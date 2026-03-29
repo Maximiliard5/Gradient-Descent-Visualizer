@@ -19,9 +19,9 @@ No installation required. Everything runs in a single HTML file, entirely in the
 
 ### Three Optimization Modes
 
-- **Gradient Descent (GD)** — runs the standard iterative update `xᵏ⁺¹ = xᵏ − αₖ ∇f(xᵏ)` with your choice of step-size strategy.
-- **Stochastic Gradient Descent (SGD)** — replaces the full gradient with a mini-batch estimate. For quadratic objectives, a proper least-squares decomposition `f(x) = (1/m) Σᵢ ½(aᵢᵀx − bᵢ)²` is constructed so the stochastic gradients are unbiased. For non-quadratic functions, calibrated Gaussian noise is added to the true gradient.
-- **Conditional Gradient (Frank-Wolfe)** — solves `min f(x) s.t. x ∈ Q` without projections. At each step, a linear minimization oracle (LMO) computes `φ_Q(xᵏ) = argmin_{z∈Q} ∇f(xᵏ)ᵀz`, then updates via the convex combination `xᵏ⁺¹ = xᵏ + αₖ(φ_Q(xᵏ) − xᵏ)`. Iterates are always feasible.
+- **Gradient Descent (GD)** — runs the standard iterative update $xᵏ⁺¹ = xᵏ − αₖ ∇f(xᵏ)$ with your choice of step-size strategy.
+- **Stochastic Gradient Descent (SGD)** — replaces the full gradient with a mini-batch estimate. For quadratic objectives, a proper least-squares decomposition $f(x) = (1/m) Σᵢ ½(aᵢᵀx − bᵢ)²$ is constructed so the stochastic gradients are unbiased. For non-quadratic functions, calibrated Gaussian noise is added to the true gradient.
+- **Conditional Gradient (Frank-Wolfe)** — solves $min f(x) s.t. x ∈ Q$ without projections. At each step, a linear minimization oracle (LMO) computes $φ_Q(xᵏ) = argmin_{z∈Q} ∇f(xᵏ)ᵀz$, then updates via the convex combination $xᵏ⁺¹ = xᵏ + αₖ(φ_Q(xᵏ) − xᵏ)$. Iterates are always feasible.
 
 ### Step-Size Strategies
 
@@ -29,9 +29,9 @@ No installation required. Everything runs in a single HTML file, entirely in the
 
 | Strategy | Description |
 |---|---|
-| **Fixed α** | Constant step size; lets you probe the divergence boundary `α > 2/L` |
+| **Fixed α** | Constant step size; lets you probe the divergence boundary $α > 2/L$ |
 | **Exact line search** | Analytically minimizes along the gradient direction (where available) |
-| **Backtracking (Armijo)** | Starts from a large step and shrinks by ρ until the sufficient-decrease condition `f(x − α∇f) ≤ f(x) − cα‖∇f‖²` is satisfied |
+| **Backtracking (Armijo)** | Starts from a large step and shrinks by ρ until the sufficient-decrease condition $f(x − α∇f) ≤ f(x) − cα‖∇f‖²$ is satisfied |
 
 **Conditional Gradient mode:**
 
