@@ -45,7 +45,7 @@ No installation required. Everything runs in a single HTML file, entirely in the
 
 | Set | Definition | LMO solution |
 |---|---|---|
-| **L₂ ball** | $‖x‖₂ ≤ r` | `−r · ∇f / ‖∇f‖$ (normalized negative gradient) |
+| **L₂ ball** | $‖x‖₂ ≤ r$ | $−r · ∇f / ‖∇f‖$ (normalized negative gradient) |
 | **L₁ ball (diamond)** | $‖x‖₁ ≤ r$ | $−r · sign(gᵢ) · eᵢ$ for $i = argmax \|gᵢ\|$ — always a vertex, promotes sparsity |
 | **L∞ ball (box)** | $‖x‖∞ ≤ r$ | $−r · sign(g)$ componentwise — always a corner |
 | **Simplex** | $x ≥ 0, x₁+x₂ ≤ r$ | Best vertex among ${0, r·e₁, r·e₂}$ — extreme sparsity |
