@@ -3,7 +3,7 @@
 **An interactive, browser-based visualization tool for gradient descent, stochastic gradient descent, projected gradient descent, and the conditional gradient method (Frank-Wolfe).**  
 Built for *Tehnici de Optimizare* (Optimization Techniques) lab sessions.
 
-🔗 **[Live Demo](https://maximiliard5.github.io/Gradient-Descent-Visualizer/GD_visualization.html)** ← replace with your GitHub Pages URL after setup
+🔗 **[Live Demo](https://maximiliard5.github.io/Gradient-Descent-Visualizer/)** ← replace with your GitHub Pages URL after setup
 
 ---
 
