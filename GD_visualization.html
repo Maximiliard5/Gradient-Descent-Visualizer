@@ -29,7 +29,6 @@
     font-family: 'Source Serif 4', Georgia, serif;
     min-height: 100vh; overflow-x: hidden;
   }
-
   .header {
     padding: 20px 32px 14px;
     border-bottom: 1px solid var(--border);
@@ -41,8 +40,6 @@
     letter-spacing: -0.5px;
   }
   .header .sub { font-size: 13px; color: var(--text-dim); font-style: italic; }
-
-  /* Formula banner */
   .formula-bar {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -68,13 +65,11 @@
     display: flex; gap: 16px; flex-wrap: wrap;
   }
   .formula-bar .props span { color: var(--accent3); }
-
   .layout {
     display: grid;
     grid-template-columns: 1fr 330px;
     height: calc(100vh - 112px);
   }
-
   .canvas-area {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -97,8 +92,6 @@
     color: var(--text-dim); background: rgba(12,14,19,0.85);
     padding: 3px 10px; border-radius: 4px; pointer-events: none;
   }
-
-  /* Sidebar */
   .sidebar {
     background: var(--surface);
     border-left: 1px solid var(--border);
@@ -116,85 +109,60 @@
     text-transform: uppercase; letter-spacing: 1px;
     margin-bottom: 10px;
   }
-
-  /* Toggle row */
   .toggle-row {
     display: flex; gap: 4px;
     background: var(--bg); border-radius: 6px; padding: 3px;
   }
   .toggle-btn {
-    flex: 1; padding: 6px 6px;
+    flex: 1; padding: 6px 4px;
     border: none; border-radius: 4px;
     background: transparent; color: var(--text-dim);
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px; cursor: pointer; transition: all 0.2s;
   }
-  .toggle-btn.active {
-    background: var(--accent1); color: var(--bg); font-weight: 700;
-  }
-  .toggle-btn.active-sgd {
-    background: var(--accent2); color: var(--bg); font-weight: 700;
-  }
-  .toggle-btn.active-mgc {
-    background: var(--accent5); color: var(--bg); font-weight: 700;
-  }
-
-  /* Function cards */
+  .toggle-btn.active { background: var(--accent1); color: var(--bg); font-weight: 700; }
+  .toggle-btn.active-sgd { background: var(--accent2); color: var(--bg); font-weight: 700; }
+  .toggle-btn.active-pgd { background: var(--accent3); color: var(--bg); font-weight: 700; }
+  .toggle-btn.active-mgc { background: var(--accent5); color: var(--bg); font-weight: 700; }
   .fn-list { display: flex; flex-direction: column; gap: 4px; }
   .fn-card {
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 6px; padding: 7px 10px;
-    color: var(--text); cursor: pointer;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; text-align: left;
-    transition: all 0.2s; line-height: 1.4;
+    background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px;
+    color: var(--text); cursor: pointer; font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; text-align: left; transition: all 0.2s; line-height: 1.4;
   }
   .fn-card:hover { border-color: var(--accent4); color: var(--accent4); }
   .fn-card.active {
-    background: rgba(255,209,102,0.08);
-    border-color: var(--accent4); color: var(--accent4);
+    background: rgba(255,209,102,0.08); border-color: var(--accent4); color: var(--accent4);
     box-shadow: 0 0 10px rgba(255,209,102,0.1);
   }
   .fn-card .fn-name { font-weight: 700; font-size: 10px; }
   .fn-card .fn-expr { font-size: 10px; color: var(--text-dim); margin-top: 1px; }
   .fn-card.active .fn-expr { color: rgba(255,209,102,0.7); }
-
-  /* Strategy buttons */
   .strategy-btns { display: flex; flex-direction: column; gap: 4px; }
   .strategy-btn {
-    background: transparent; border: 1px solid var(--border);
-    border-radius: 6px; padding: 6px 10px;
+    background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px;
     color: var(--text); font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; cursor: pointer; text-align: left;
-    transition: all 0.2s;
+    font-size: 11px; cursor: pointer; text-align: left; transition: all 0.2s;
   }
   .strategy-btn:hover { border-color: var(--accent1); color: var(--accent1); }
   .strategy-btn.active {
     background: rgba(0,229,160,0.08); border-color: var(--accent1);
     color: var(--accent1); box-shadow: 0 0 10px var(--accent1-glow);
   }
-
-  /* Constraint set buttons */
   .constraint-btn {
-    background: transparent; border: 1px solid var(--border);
-    border-radius: 6px; padding: 6px 10px;
+    background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px;
     color: var(--text); font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; cursor: pointer; text-align: left;
-    transition: all 0.2s;
+    font-size: 11px; cursor: pointer; text-align: left; transition: all 0.2s;
   }
   .constraint-btn:hover { border-color: var(--accent5); color: var(--accent5); }
   .constraint-btn.active {
     background: rgba(192,132,252,0.08); border-color: var(--accent5);
     color: var(--accent5); box-shadow: 0 0 10px var(--accent5-glow);
   }
-
-  /* Sliders */
   .slider-row { display: flex; flex-direction: column; gap: 3px; margin-top: 8px; }
   .slider-row:first-of-type { margin-top: 0; }
   .slider-row label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim);
     display: flex; justify-content: space-between;
   }
   .slider-row label span { color: var(--accent4); }
@@ -207,74 +175,51 @@
     background: var(--accent1); border-radius: 50%;
     cursor: pointer; border: 2px solid var(--bg);
   }
-
-  /* Buttons */
   .btn-row { display: flex; gap: 6px; margin-top: 6px; }
   .btn {
-    flex: 1; padding: 7px 8px;
-    border: 1px solid var(--border); border-radius: 6px;
-    background: transparent; color: var(--text);
-    font-family: 'JetBrains Mono', monospace;
+    flex: 1; padding: 7px 8px; border: 1px solid var(--border); border-radius: 6px;
+    background: transparent; color: var(--text); font-family: 'JetBrains Mono', monospace;
     font-size: 10px; cursor: pointer; transition: all 0.2s;
   }
   .btn:hover { border-color: var(--accent1); color: var(--accent1); }
-  .btn.primary {
-    background: var(--accent1); color: var(--bg);
-    border-color: var(--accent1); font-weight: 700;
-  }
+  .btn.primary { background: var(--accent1); color: var(--bg); border-color: var(--accent1); font-weight: 700; }
   .btn.primary:hover { background: #00cc8e; }
-
-  /* Stats */
-  .stats {
-    font-family: 'JetBrains Mono', monospace; font-size: 10px; line-height: 1.9;
-  }
+  .stats { font-family: 'JetBrains Mono', monospace; font-size: 10px; line-height: 1.9; }
   .stats .row { display: flex; justify-content: space-between; }
   .stats .val { color: var(--accent4); }
   .stats .lbl { color: var(--text-dim); }
-
-  /* Info */
   .info-box {
-    background: var(--surface2);
-    border: 1px solid var(--border); border-radius: 8px;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
     padding: 11px; font-size: 11px; line-height: 1.55; color: var(--text-dim);
   }
   .info-box strong { color: var(--text); }
   .info-box code {
     font-family: 'JetBrains Mono', monospace; font-size: 10px;
-    background: rgba(0,229,160,0.1); color: var(--accent1);
-    padding: 1px 4px; border-radius: 3px;
+    background: rgba(0,229,160,0.1); color: var(--accent1); padding: 1px 4px; border-radius: 3px;
   }
-
-  .legend {
-    display: flex; flex-direction: column; gap: 3px;
-    font-family: 'JetBrains Mono', monospace; font-size: 10px;
-  }
+  .legend { display: flex; flex-direction: column; gap: 3px; font-family: 'JetBrains Mono', monospace; font-size: 10px; }
   .legend-item { display: flex; align-items: center; gap: 6px; }
   .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-
   .sgd-params { transition: all 0.2s; }
 </style>
 </head>
 <body>
-
 <div class="header">
   <h1>▸ Gradient Descent Explorer</h1>
   <div class="sub">Tehnici de Optimizare — Laborator interactiv</div>
 </div>
-
 <div class="formula-bar">
   <div class="label">Minimizing</div>
   <div class="formula" id="formulaDisplay">f(x₁,x₂) = ½(κ·x₁² + x₂²)</div>
-  <div class="props" id="propsBar">
-    <div>L = <span id="propL">—</span></div>
-    <div>σ = <span id="propSigma">—</span></div>
-    <div>κ = <span id="propKappa">—</span></div>
+  <div class="props">
+    <div id="propLWrap">L = <span id="propL">—</span></div>
+    <div id="propSigmaWrap">σ = <span id="propSigma">—</span></div>
+    <div id="propKappaWrap">κ = <span id="propKappa">—</span></div>
     <div>x* = <span id="propXstar">—</span></div>
     <div id="propQWrap" style="display:none">Q = <span id="propQ">—</span></div>
     <div id="propRWrap" style="display:none">r = <span id="propR">—</span></div>
   </div>
 </div>
-
 <div class="layout">
   <div class="canvas-area">
     <div class="canvas-panel">
@@ -287,37 +232,31 @@
       <canvas id="convCanvas"></canvas>
     </div>
   </div>
-
   <div class="sidebar">
-    <!-- Mode toggle -->
-    <div class="ctrl-group">
-      <h3>Method</h3>
+    <div class="ctrl-group"><h3>Method</h3>
       <div class="toggle-row" id="modeToggle">
         <button class="toggle-btn active" data-mode="gd">GD</button>
         <button class="toggle-btn" data-mode="sgd">SGD</button>
+        <button class="toggle-btn" data-mode="pgd">Proj. GD</button>
         <button class="toggle-btn" data-mode="mgc">Cond. GD</button>
       </div>
     </div>
-
-    <!-- Function picker -->
-    <div class="ctrl-group">
-      <h3>Objective Function</h3>
-      <div class="fn-list" id="fnList"></div>
-    </div>
-
-    <!-- GD Strategy (only in GD mode) -->
-    <div class="ctrl-group" id="strategyGroup">
-      <h3>Step-Size Strategy</h3>
+    <div class="ctrl-group"><h3>Objective Function</h3><div class="fn-list" id="fnList"></div></div>
+    <div class="ctrl-group" id="strategyGroup"><h3>Step-Size Strategy</h3>
       <div class="strategy-btns">
         <button class="strategy-btn active" data-s="fixed">α = constant</button>
         <button class="strategy-btn" data-s="exact">Exact line search</button>
         <button class="strategy-btn" data-s="backtrack">Backtracking (Armijo)</button>
       </div>
     </div>
-
-    <!-- MGC Constraint Set (only in MGC mode) -->
-    <div class="ctrl-group" id="constraintGroup" style="display:none">
-      <h3>Constraint Set Q</h3>
+    <div class="ctrl-group" id="pgdStrategyGroup" style="display:none"><h3>Step-Size Strategy (PGD)</h3>
+      <div class="strategy-btns" id="pgdStepBtns">
+        <button class="strategy-btn active" data-ps="fixed">α = constant</button>
+        <button class="strategy-btn" data-ps="invL">α = 1/L</button>
+        <button class="strategy-btn" data-ps="backtrack">Backtracking (Armijo + proj.)</button>
+      </div>
+    </div>
+    <div class="ctrl-group" id="constraintGroup" style="display:none"><h3>Constraint Set Q</h3>
       <div class="strategy-btns" id="constraintBtns">
         <button class="constraint-btn active" data-q="l2">‖x‖₂ ≤ r  (Euclidean ball)</button>
         <button class="constraint-btn" data-q="l1">‖x‖₁ ≤ r  (Diamond / L₁)</button>
@@ -325,83 +264,30 @@
         <button class="constraint-btn" data-q="simplex">x ≥ 0, Σxᵢ ≤ r  (Simplex)</button>
       </div>
     </div>
-
-    <!-- MGC Step-Size Strategy (only in MGC mode) -->
-    <div class="ctrl-group" id="mgcStrategyGroup" style="display:none">
-      <h3>Step-Size Strategy (FW)</h3>
+    <div class="ctrl-group" id="mgcStrategyGroup" style="display:none"><h3>Step-Size Strategy (FW)</h3>
       <div class="strategy-btns" id="mgcStepBtns">
         <button class="strategy-btn active" data-ms="standard">αₖ = 2/(k+2)  (standard)</button>
         <button class="strategy-btn" data-ms="fixed">αₖ = α  (constant)</button>
         <button class="strategy-btn" data-ms="linesearch">Line search on [0,1]</button>
       </div>
     </div>
-
-    <!-- Parameters -->
-    <div class="ctrl-group">
-      <h3>Parameters</h3>
-      <div class="slider-row" id="alphaRow">
-        <label>Step size α <span id="alphaVal">0.010</span></label>
-        <input type="range" id="alphaSlider" min="0.0005" max="0.15" step="0.0005" value="0.01">
-      </div>
-      <div class="slider-row" id="cRow" style="display:none">
-        <label>Armijo c <span id="cVal">0.30</span></label>
-        <input type="range" id="cSlider" min="0.01" max="0.5" step="0.01" value="0.3">
-      </div>
-      <div class="slider-row" id="rhoRow" style="display:none">
-        <label>Armijo ρ <span id="rhoVal">0.50</span></label>
-        <input type="range" id="rhoSlider" min="0.1" max="0.95" step="0.05" value="0.5">
-      </div>
-
-      <!-- MGC radius -->
-      <div class="slider-row" id="radiusRow" style="display:none">
-        <label>Constraint radius r <span id="radiusVal">3.00</span></label>
-        <input type="range" id="radiusSlider" min="0.5" max="6" step="0.1" value="3.0">
-      </div>
-      <!-- MGC fixed alpha (separate range) -->
-      <div class="slider-row" id="mgcAlphaRow" style="display:none">
-        <label>Step size α <span id="mgcAlphaVal">0.10</span></label>
-        <input type="range" id="mgcAlphaSlider" min="0.01" max="1.0" step="0.01" value="0.10">
-      </div>
-
-      <!-- SGD-specific -->
+    <div class="ctrl-group"><h3>Parameters</h3>
+      <div class="slider-row" id="alphaRow"><label>Step size α <span id="alphaVal">0.010</span></label><input type="range" id="alphaSlider" min="0.0005" max="0.15" step="0.0005" value="0.01"></div>
+      <div class="slider-row" id="cRow" style="display:none"><label>Armijo c <span id="cVal">0.30</span></label><input type="range" id="cSlider" min="0.01" max="0.5" step="0.01" value="0.3"></div>
+      <div class="slider-row" id="rhoRow" style="display:none"><label>Armijo ρ <span id="rhoVal">0.50</span></label><input type="range" id="rhoSlider" min="0.1" max="0.95" step="0.05" value="0.5"></div>
+      <div class="slider-row" id="radiusRow" style="display:none"><label>Constraint radius r <span id="radiusVal">3.00</span></label><input type="range" id="radiusSlider" min="0.5" max="6" step="0.1" value="3.0"></div>
+      <div class="slider-row" id="mgcAlphaRow" style="display:none"><label>Step size α <span id="mgcAlphaVal">0.10</span></label><input type="range" id="mgcAlphaSlider" min="0.01" max="1.0" step="0.01" value="0.10"></div>
+      <div class="slider-row" id="pgdAlphaRow" style="display:none"><label>Step size α <span id="pgdAlphaVal">0.050</span></label><input type="range" id="pgdAlphaSlider" min="0.001" max="0.5" step="0.001" value="0.05"></div>
       <div class="sgd-params" id="sgdParams" style="display:none">
-        <div class="slider-row">
-          <label>Mini-batch N <span id="batchVal">1</span></label>
-          <input type="range" id="batchSlider" min="1" max="50" step="1" value="1">
-        </div>
-        <div class="slider-row">
-          <label>Decay τ (αₖ = α₀/(1+k/τ)) <span id="decayVal">50</span></label>
-          <input type="range" id="decaySlider" min="5" max="500" step="5" value="50">
-        </div>
-        <div class="slider-row">
-          <label>Samples m (components) <span id="sampVal">30</span></label>
-          <input type="range" id="sampSlider" min="5" max="100" step="1" value="30">
-        </div>
+        <div class="slider-row"><label>Mini-batch N <span id="batchVal">1</span></label><input type="range" id="batchSlider" min="1" max="50" step="1" value="1"></div>
+        <div class="slider-row"><label>Decay τ (αₖ = α₀/(1+k/τ)) <span id="decayVal">50</span></label><input type="range" id="decaySlider" min="5" max="500" step="5" value="50"></div>
+        <div class="slider-row"><label>Samples m (components) <span id="sampVal">30</span></label><input type="range" id="sampSlider" min="5" max="100" step="1" value="30"></div>
       </div>
-
-      <div class="slider-row">
-        <label>Max iterations <span id="maxIterVal">200</span></label>
-        <input type="range" id="maxIterSlider" min="10" max="1000" step="10" value="200">
-      </div>
-      <div class="slider-row" id="condRow">
-        <label>Condition κ(A) <span id="condVal">10</span></label>
-        <input type="range" id="condSlider" min="1" max="200" step="1" value="10">
-      </div>
+      <div class="slider-row"><label>Max iterations <span id="maxIterVal">200</span></label><input type="range" id="maxIterSlider" min="10" max="1000" step="10" value="200"></div>
+      <div class="slider-row" id="condRow"><label>Condition κ(A) <span id="condVal">10</span></label><input type="range" id="condSlider" min="1" max="200" step="1" value="10"></div>
     </div>
-
-    <!-- Controls -->
-    <div class="ctrl-group">
-      <h3>Controls</h3>
-      <div class="btn-row">
-        <button class="btn primary" id="runBtn">▶ Run</button>
-        <button class="btn" id="stepBtn">Step</button>
-        <button class="btn" id="resetBtn">Reset</button>
-      </div>
-    </div>
-
-    <!-- Results -->
-    <div class="ctrl-group">
-      <h3>Results</h3>
+    <div class="ctrl-group"><h3>Controls</h3><div class="btn-row"><button class="btn primary" id="runBtn">▶ Run</button><button class="btn" id="stepBtn">Step</button><button class="btn" id="resetBtn">Reset</button></div></div>
+    <div class="ctrl-group"><h3>Results</h3>
       <div class="stats">
         <div class="row"><span class="lbl">Iterations:</span><span class="val" id="statIter">—</span></div>
         <div class="row"><span class="lbl">f(xᵏ):</span><span class="val" id="statF">—</span></div>
@@ -410,1301 +296,80 @@
         <div class="row"><span class="lbl">αₖ used:</span><span class="val" id="statAlpha">—</span></div>
         <div class="row"><span class="lbl">Status:</span><span class="val" id="statStatus">Ready</span></div>
       </div>
-      <div style="margin-top:8px">
-        <div class="legend" id="legendArea">
-          <div class="legend-item"><div class="legend-dot" style="background:var(--accent1)"></div> Iterates xᵏ</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div> Starting x⁰</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--accent4)"></div> Optimum x*</div>
-        </div>
-      </div>
+      <div style="margin-top:8px"><div class="legend" id="legendArea"></div></div>
     </div>
-
-    <!-- Dynamic info box -->
     <div class="info-box" id="infoBox"></div>
   </div>
 </div>
-
 <script>
-// =====================================================================
-// FUNCTION DEFINITIONS
-// =====================================================================
-const FUNCTIONS = [
-  {
-    id: 'quadratic',
-    name: 'Quadratic (diagonal)',
-    expr: 'f(x) = ½(κ·x₁² + x₂²)',
-    view: { xmin:-5, xmax:5, ymin:-5, ymax:5 },
-    usesKappa: true,
-    xstar: [0, 0],
-    f: (x, y, p) => 0.5 * (p.L*x*x + p.sig*y*y),
-    grad: (x, y, p) => [p.L*x, p.sig*y],
-    getParams: (kappa) => ({ L: kappa, sig: 1 }),
-    info: {
-      gd: `<strong>Diagonal quadratic.</strong> Eigenvalues of the Hessian are L and σ.
-           When κ is large, contours become very elongated ellipses and GD zig-zags.
-           <br><br>Optimal step: <code>α = 2/(L+σ)</code>. Diverges if <code>α > 2/L</code>.`,
-      sgd: `<strong>Diagonal quadratic.</strong> SGD decomposes f into m stochastic components.
-           <br><br>Larger batch N → less noise → more like GD. Decay τ controls the learning rate schedule.`,
-      mgc: `<strong>Diagonal quadratic.</strong> Unconstrained min at (0,0).
-           When Q doesn't contain the origin, watch FW zig-zag along the boundary!
-           <br><br>The <strong>duality gap</strong> gₖ = ∇f(xᵏ)ᵀ(xᵏ − φ_Q(xᵏ)) is a
-           computable convergence certificate unique to Frank-Wolfe.`
-    }
-  },
-  {
-    id: 'quadratic_rotated',
-    name: 'Quadratic (rotated)',
-    expr: 'f(x) = ½ xᵀHx, H = RᵀΛR (45° rotation)',
-    view: { xmin:-5, xmax:5, ymin:-5, ymax:5 },
-    usesKappa: true,
-    xstar: [0, 0],
-    f: (x, y, p) => {
-      const c = Math.cos(p.theta), s = Math.sin(p.theta);
-      const u = c*x + s*y, v = -s*x + c*y;
-      return 0.5*(p.L*u*u + p.sig*v*v);
-    },
-    grad: (x, y, p) => {
-      const c = Math.cos(p.theta), s = Math.sin(p.theta);
-      const u = c*x + s*y, v = -s*x + c*y;
-      const du = p.L*u, dv = p.sig*v;
-      return [c*du - s*dv, s*du + c*dv];
-    },
-    getParams: (kappa) => ({ L: kappa, sig: 1, theta: Math.PI/4 }),
-    info: {
-      gd: `<strong>Rotated quadratic.</strong> Same eigenvalues as diagonal, but axes tilted 45°.
-           GD doesn't align with eigenvectors → more zig-zagging visible.
-           <br><br>Shows why coordinate-aligned methods struggle on non-axis-aligned problems.`,
-      sgd: `<strong>Rotated quadratic.</strong> Rotation misaligns the gradient with coordinate axes.
-           SGD noise adds to the misalignment — compare convergence with the diagonal version.`,
-      mgc: `<strong>Rotated quadratic.</strong> Axes tilted 45°. Shows how the geometry
-           of Q interacts with the function's contour shape.
-           <br><br>Compare L₁ vs L₂ constraints — the L₁ ball aligns with axes, so
-           FW vertices jump between a small set of corners.`
-    }
-  },
-  {
-    id: 'rosenbrock',
-    name: 'Rosenbrock',
-    expr: 'f(x) = 100(x₂ − x₁²)² + (1 − x₁)²',
-    view: { xmin:-2.5, xmax:2.5, ymin:-1.5, ymax:3.5 },
-    usesKappa: false,
-    xstar: [1, 1],
-    f: (x, y) => 100*(y - x*x)**2 + (1-x)**2,
-    grad: (x, y) => [
-      -400*x*(y - x*x) - 2*(1-x),
-      200*(y - x*x)
-    ],
-    getParams: () => ({ L: 1600 }),
-    info: {
-      gd: `<strong>Rosenbrock banana.</strong> Non-convex-looking valley, but actually convex!
-           Minimum at (1,1). The narrow curved valley makes GD extremely slow.
-           <br><br>Try different starting points. Notice how GD finds the valley fast but crawls along it.`,
-      sgd: `<strong>Rosenbrock banana.</strong> The narrow valley is hard even for SGD.
-           Try large batch sizes to stabilize progress along the valley floor.`,
-      mgc: `<strong>Rosenbrock banana.</strong> Minimum at (1,1). The narrow curved valley
-           challenges projection-free methods too.
-           <br><br>Notice how FW selects different vertices of Q as the gradient direction
-           changes along the valley. Convergence rate is O(1/k) — sublinear.`
-    }
-  },
-  {
-    id: 'beale',
-    name: 'Beale',
-    expr: 'f(x) = Σᵢ (cᵢ − x₁(1−x₂ⁱ))²',
-    view: { xmin:-1, xmax:4, ymin:-1, ymax:2.5 },
-    usesKappa: false,
-    xstar: [3, 0.5],
-    f: (x, y) => {
-      const t1 = 1.5 - x*(1-y);
-      const t2 = 2.25 - x*(1-y*y);
-      const t3 = 2.625 - x*(1-y*y*y);
-      return t1*t1 + t2*t2 + t3*t3;
-    },
-    grad: (x, y) => {
-      const t1 = 1.5 - x*(1-y);
-      const t2 = 2.25 - x*(1-y*y);
-      const t3 = 2.625 - x*(1-y*y*y);
-      return [
-        -2*t1*(1-y) - 2*t2*(1-y*y) - 2*t3*(1-y*y*y),
-        2*t1*x + 2*t2*2*x*y + 2*t3*3*x*y*y
-      ];
-    },
-    getParams: () => ({ L: 200 }),
-    info: {
-      gd: `<strong>Beale function.</strong> A classic non-linear test with minimum at (3, 0.5).
-           Multiple flat regions make gradient-based methods slow in some areas.
-           <br><br>Good for testing backtracking line search vs fixed step.`,
-      sgd: `<strong>Beale function.</strong> Flat regions cause vanishing gradients.
-           SGD noise can help explore, but may also cause instability near the minimum.`,
-      mgc: `<strong>Beale function.</strong> Minimum at (3, 0.5).
-           Multiple flat regions interact with the constraint set geometry.
-           <br><br>Try different constraint radii to see how the feasible region affects convergence.`
-    }
-  },
-  {
-    id: 'himmelblau',
-    name: 'Himmelblau',
-    expr: 'f(x) = (x₁² + x₂ − 11)² + (x₁ + x₂² − 7)²',
-    view: { xmin:-5, xmax:5, ymin:-5, ymax:5 },
-    usesKappa: false,
-    xstar: [3, 2],
-    f: (x, y) => (x*x + y - 11)**2 + (x + y*y - 7)**2,
-    grad: (x, y) => [
-      4*x*(x*x+y-11) + 2*(x+y*y-7),
-      2*(x*x+y-11) + 4*y*(x+y*y-7)
-    ],
-    getParams: () => ({ L: 300 }),
-    info: {
-      gd: `<strong>Himmelblau.</strong> Has 4 identical minima at ≈(3,2), (-2.8,3.1), (-3.8,-3.3), (3.6,-1.8).
-           <br><br>Click different starting points and see which minimum GD converges to!
-           Demonstrates dependence of local methods on initialization.`,
-      sgd: `<strong>Himmelblau.</strong> 4 identical minima. SGD noise can sometimes help
-           escape from one basin to another — increase the noise to see!`,
-      mgc: `<strong>Himmelblau.</strong> Four minima — which one does FW find?
-           It depends on x⁰ and the constraint set.
-           <br><br>A smaller Q restricts the reachable set, while larger Q may include multiple minima.`
-    }
-  },
-  {
-    id: 'styblinski',
-    name: 'Styblinski-Tang',
-    expr: 'f(x) = ½ Σᵢ (xᵢ⁴ − 16xᵢ² + 5xᵢ)',
-    view: { xmin:-5, xmax:5, ymin:-5, ymax:5 },
-    usesKappa: false,
-    xstar: [-2.9035, -2.9035],
-    f: (x, y) => 0.5*((x**4 - 16*x*x + 5*x) + (y**4 - 16*y*y + 5*y)),
-    grad: (x, y) => [
-      0.5*(4*x**3 - 32*x + 5),
-      0.5*(4*y**3 - 32*y + 5)
-    ],
-    getParams: () => ({ L: 200 }),
-    info: {
-      gd: `<strong>Styblinski-Tang.</strong> Multiple local minima. Global min at ≈(−2.9, −2.9).
-           <br><br>GD will get trapped in whichever basin the starting point falls into.
-           SGD's noise can occasionally help escape shallow local minima.`,
-      sgd: `<strong>Styblinski-Tang.</strong> Multiple local minima. Global min at ≈(−2.9, −2.9).
-           <br><br>SGD noise may help escape shallow basins. Try high noise + slow decay.`,
-      mgc: `<strong>Styblinski-Tang.</strong> Multiple local minima. With a small enough
-           constraint set, you can isolate a single basin.
-           <br><br>FW's sublinear convergence rate is clearly visible here.`
-    }
-  },
-  {
-    id: 'shifted_quadratic',
-    name: 'Shifted Quadratic',
-    expr: 'f(x) = ½((x₁−3)² + (x₂−2)²)',
-    view: { xmin:-2, xmax:5, ymin:-2, ymax:4 },
-    usesKappa: false,
-    xstar: [3, 2],
-    f: (x, y) => 0.5*((x-3)**2 + (y-2)**2),
-    grad: (x, y) => [x-3, y-2],
-    getParams: () => ({ L: 1, sig: 1 }),
-    info: {
-      gd: `<strong>Shifted quadratic.</strong> Simple isotropic quadratic with minimum at (3, 2).
-           <br><br>Easy for GD — converges in very few steps with any reasonable step size.`,
-      sgd: `<strong>Shifted quadratic.</strong> Isotropic and easy. Good baseline to see
-           how noise affects convergence around a clean minimum.`,
-      mgc: `<strong>Shifted quadratic.</strong> Min at (3, 2). With small r, this lies
-           outside Q and the constrained optimum is on Q's boundary.
-           <br><br>Frank-Wolfe always stays feasible — each iterate is a convex
-           combination of the previous point and a vertex of Q.`
-    }
-  },
-];
-
-// =====================================================================
-// CONSTRAINT SET DEFINITIONS (used only in MGC mode)
-// =====================================================================
-const CONSTRAINTS = {
-  l2: {
-    name: 'L₂ ball', label: '‖x‖₂ ≤ r',
-    lmo: (gx, gy, r) => {
-      const gn = Math.sqrt(gx*gx + gy*gy);
-      if (gn < 1e-15) return [0, 0];
-      return [-r * gx / gn, -r * gy / gn];
-    },
-    contains: (x, y, r) => x*x + y*y <= r*r + 1e-10,
-    project: (x, y, r) => {
-      const n = Math.sqrt(x*x + y*y);
-      if (n <= r) return [x, y];
-      return [r*x/n, r*y/n];
-    },
-    drawPath: (ctx, canvas, r, wToC) => {
-      const N = 100;
-      ctx.beginPath();
-      for (let i = 0; i <= N; i++) {
-        const t = (2 * Math.PI * i) / N;
-        const [px, py] = wToC(r * Math.cos(t), r * Math.sin(t));
-        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-      }
-      ctx.closePath();
-    }
-  },
-  l1: {
-    name: 'L₁ ball', label: '‖x‖₁ ≤ r',
-    lmo: (gx, gy, r) => {
-      if (Math.abs(gx) >= Math.abs(gy)) return [-r * Math.sign(gx || 1), 0];
-      return [0, -r * Math.sign(gy || 1)];
-    },
-    contains: (x, y, r) => Math.abs(x) + Math.abs(y) <= r + 1e-10,
-    project: (x, y, r) => {
-      if (Math.abs(x) + Math.abs(y) <= r) return [x, y];
-      const sx = Math.sign(x), sy = Math.sign(y);
-      let ax = Math.abs(x), ay = Math.abs(y);
-      const mu = (ax + ay - r) / 2;
-      ax = Math.max(0, ax - mu); ay = Math.max(0, ay - mu);
-      return [sx * ax, sy * ay];
-    },
-    drawPath: (ctx, canvas, r, wToC) => {
-      const verts = [[r,0],[0,r],[-r,0],[0,-r]];
-      ctx.beginPath();
-      verts.forEach((v, i) => {
-        const [px, py] = wToC(v[0], v[1]);
-        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-      });
-      ctx.closePath();
-    }
-  },
-  linf: {
-    name: 'L∞ ball', label: '‖x‖∞ ≤ r',
-    lmo: (gx, gy, r) => [-r * Math.sign(gx || 1), -r * Math.sign(gy || 1)],
-    contains: (x, y, r) => Math.max(Math.abs(x), Math.abs(y)) <= r + 1e-10,
-    project: (x, y, r) => [Math.max(-r, Math.min(r, x)), Math.max(-r, Math.min(r, y))],
-    drawPath: (ctx, canvas, r, wToC) => {
-      const verts = [[-r,-r],[r,-r],[r,r],[-r,r]];
-      ctx.beginPath();
-      verts.forEach((v, i) => {
-        const [px, py] = wToC(v[0], v[1]);
-        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-      });
-      ctx.closePath();
-    }
-  },
-  simplex: {
-    name: 'Simplex', label: 'x ≥ 0, Σxᵢ ≤ r',
-    lmo: (gx, gy, r) => {
-      const vals = [
-        { z: [0, 0], v: 0 },
-        { z: [r, 0], v: gx * r },
-        { z: [0, r], v: gy * r },
-      ];
-      vals.sort((a, b) => a.v - b.v);
-      return vals[0].z;
-    },
-    contains: (x, y, r) => x >= -1e-10 && y >= -1e-10 && x + y <= r + 1e-10,
-    project: (x, y, r) => {
-      let px = Math.max(0, x), py = Math.max(0, y);
-      if (px + py <= r) return [px, py];
-      const s = (px + py - r) / 2;
-      px = Math.max(0, px - s); py = Math.max(0, py - s);
-      return [px, py];
-    },
-    drawPath: (ctx, canvas, r, wToC) => {
-      const verts = [[0,0],[r,0],[0,r]];
-      ctx.beginPath();
-      verts.forEach((v, i) => {
-        const [px, py] = wToC(v[0], v[1]);
-        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-      });
-      ctx.closePath();
-    }
-  }
-};
-
-// =====================================================================
-// STATE
-// =====================================================================
-let currentFnIdx = 0;
-let mode = 'gd';         // 'gd', 'sgd', or 'mgc'
-let strategy = 'fixed';  // GD step-size strategy
-let mgcStrategy = 'standard'; // MGC step-size strategy
-let constraintType = 'l2';
-let startPt = [-3.5, 2.8];
-let path = [];
-let fHist = [];
-let alphaHist = [];
-let gapHist = [];
-let fwVertices = [];
-let animFrame = null;
-let animIdx = 0;
-
-function fn()   { return FUNCTIONS[currentFnIdx]; }
-function fnP()  { return fn().getParams(parseFloat(document.getElementById('condSlider').value)); }
-function cst()  { return CONSTRAINTS[constraintType]; }
-function getRadius() { return parseFloat(document.getElementById('radiusSlider').value); }
-
-// =====================================================================
-// SGD SUPPORT (unchanged)
-// =====================================================================
-let sgdComponents = null;
-
-function buildSGDComponents() {
-  const m = parseInt(document.getElementById('sampSlider').value);
-  const fnObj = fn();
-  if (fnObj.id === 'quadratic' || fnObj.id === 'quadratic_rotated') {
-    const p = fnP();
-    const A = [], b = [];
-    for (let i = 0; i < m; i++) {
-      const a1 = randn(), a2 = randn();
-      A.push([a1, a2]);
-      b.push(randn() * 0.01);
-    }
-    if (fnObj.id === 'quadratic') {
-      for (let i = 0; i < m; i++) {
-        A[i][0] *= Math.sqrt(p.L / m) * Math.sqrt(2);
-        A[i][1] *= Math.sqrt(p.sig / m) * Math.sqrt(2);
-      }
-    } else {
-      const c = Math.cos(p.theta), s = Math.sin(p.theta);
-      for (let i = 0; i < m; i++) {
-        const raw0 = A[i][0], raw1 = A[i][1];
-        const scaled0 = raw0 * Math.sqrt(p.L / m) * Math.sqrt(2);
-        const scaled1 = raw1 * Math.sqrt(p.sig / m) * Math.sqrt(2);
-        A[i][0] = c*scaled0 - s*scaled1;
-        A[i][1] = s*scaled0 + c*scaled1;
-      }
-    }
-    sgdComponents = { A, b, m, type: 'ls' };
-  } else {
-    sgdComponents = { m, type: 'noisy' };
-  }
-}
-
-function stochGrad(x, y) {
-  const batchSize = parseInt(document.getElementById('batchSlider').value);
-  const comp = sgdComponents;
-  if (comp.type === 'ls') {
-    const g = [0, 0];
-    for (let s = 0; s < batchSize; s++) {
-      const idx = Math.floor(Math.random() * comp.m);
-      const ai = comp.A[idx];
-      const ri = ai[0]*x + ai[1]*y - comp.b[idx];
-      g[0] += ai[0] * ri;
-      g[1] += ai[1] * ri;
-    }
-    g[0] *= comp.m / batchSize;
-    g[1] *= comp.m / batchSize;
-    return g;
-  } else {
-    const trueG = fn().grad(x, y, fnP());
-    const noiseScale = Math.max(0.5, Math.sqrt(trueG[0]**2 + trueG[1]**2)) / Math.sqrt(batchSize);
-    return [trueG[0] + randn() * noiseScale, trueG[1] + randn() * noiseScale];
-  }
-}
-
-function randn() {
-  const u1 = Math.random(), u2 = Math.random();
-  return Math.sqrt(-2*Math.log(u1+1e-30)) * Math.cos(2*Math.PI*u2);
-}
-
-// =====================================================================
-// CANVAS
-// =====================================================================
-const cC = document.getElementById('contourCanvas');
-const cV = document.getElementById('convCanvas');
-const ctxC = cC.getContext('2d');
-const ctxV = cV.getContext('2d');
-
-function resizeCanvases() {
-  for (const c of [cC, cV]) {
-    const r = c.parentElement.getBoundingClientRect();
-    const h = r.height - 28;
-    c.width = r.width * devicePixelRatio;
-    c.height = Math.max(h, 100) * devicePixelRatio;
-    c.style.width = r.width + 'px';
-    c.style.height = Math.max(h, 100) + 'px';
-  }
-}
-
-function getView() {
-  if (mode === 'mgc') {
-    const r = getRadius();
-    const pad = Math.max(r * 0.6, 1.5);
-    if (constraintType === 'simplex') {
-      return { xmin: -pad * 0.5, xmax: r + pad, ymin: -pad * 0.5, ymax: r + pad };
-    }
-    return { xmin: -r - pad, xmax: r + pad, ymin: -r - pad, ymax: r + pad };
-  }
-  return fn().view;
-}
-
-function worldToCanvas(wx, wy, canvas) {
-  const v = getView();
-  return [
-    (wx - v.xmin) / (v.xmax - v.xmin) * canvas.width,
-    (1 - (wy - v.ymin) / (v.ymax - v.ymin)) * canvas.height
-  ];
-}
-function canvasToWorld(cx, cy, canvas) {
-  const rect = canvas.getBoundingClientRect();
-  const v = getView();
-  const px = (cx - rect.left) / rect.width;
-  const py = (cy - rect.top) / rect.height;
-  return [v.xmin + px*(v.xmax - v.xmin), v.ymax - py*(v.ymax - v.ymin)];
-}
-
-// =====================================================================
-// CONTOUR RENDERING
-// =====================================================================
-function drawContours(ctx, canvas) {
-  const w = canvas.width, h = canvas.height;
-  const v = getView();
-  const fnObj = fn();
-  const p = fnP();
-
-  ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = '#0c0e13';
-  ctx.fillRect(0, 0, w, h);
-
-  // Pixel fill
-  const res = 2;
-  const cw = Math.ceil(w/res), ch = Math.ceil(h/res);
-  const imgData = ctx.createImageData(cw, ch);
-
-  const vals = new Float32Array(cw * ch);
-  let maxVal = -Infinity, minVal = Infinity;
-  for (let py = 0; py < ch; py++) {
-    for (let px = 0; px < cw; px++) {
-      const wx = v.xmin + (px*res/w) * (v.xmax - v.xmin);
-      const wy = v.ymax - (py*res/h) * (v.ymax - v.ymin);
-      let val = fnObj.f(wx, wy, p);
-      vals[py*cw + px] = val;
-      if (isFinite(val)) {
-        maxVal = Math.max(maxVal, val);
-        minVal = Math.min(minVal, val);
-      }
-    }
-  }
-
-  const shift = -minVal + 1;
-  const logMin = Math.log(minVal + shift);
-  const logMax = Math.log(maxVal + shift);
-
-  for (let py = 0; py < ch; py++) {
-    for (let px = 0; px < cw; px++) {
-      const val = vals[py*cw + px];
-      const t = Math.max(0, Math.min(1,
-        (Math.log(val + shift) - logMin) / (logMax - logMin + 1e-10)
-      ));
-      const idx = (py * cw + px) * 4;
-      imgData.data[idx]   = Math.floor(10 + t * 30);
-      imgData.data[idx+1] = Math.floor(14 + t * 60);
-      imgData.data[idx+2] = Math.floor(28 + t * 95);
-      imgData.data[idx+3] = 255;
-    }
-  }
-
-  const tmp = document.createElement('canvas');
-  tmp.width = cw; tmp.height = ch;
-  tmp.getContext('2d').putImageData(imgData, 0, 0);
-  ctx.imageSmoothingEnabled = true;
-  ctx.drawImage(tmp, 0, 0, w, h);
-
-  // Contour lines via marching squares
-  const numLevels = 20;
-  const levels = [];
-  for (let i = 0; i < numLevels; i++) {
-    const shiftedLevel = Math.exp(logMin + (i+1)/(numLevels+1) * (logMax - logMin));
-    levels.push(shiftedLevel - shift);
-  }
-
-  const gs = 2;
-  const gcw = Math.floor((cw - 1) / gs);
-  const gch = Math.floor((ch - 1) / gs);
-  function gval(gi, gj) { return vals[gj * gs * cw + gi * gs]; }
-  function lerp(va, vb, lev) { return (lev - va) / (vb - va); }
-
-  ctx.strokeStyle = 'rgba(200,215,240,0.18)';
-  ctx.lineWidth = 1.0 * devicePixelRatio;
-  ctx.lineJoin = 'round';
-  ctx.lineCap = 'round';
-
-  for (const lev of levels) {
-    ctx.beginPath();
-    for (let gj = 0; gj < gch; gj++) {
-      for (let gi = 0; gi < gcw; gi++) {
-        const v00 = gval(gi, gj), v10 = gval(gi+1, gj);
-        const v11 = gval(gi+1, gj+1), v01 = gval(gi, gj+1);
-        const c = (v00 >= lev ? 8 : 0) | (v10 >= lev ? 4 : 0)
-                | (v11 >= lev ? 2 : 0) | (v01 >= lev ? 1 : 0);
-        if (c === 0 || c === 15) continue;
-        const x0 = gi * gs * res, x1 = (gi+1) * gs * res;
-        const y0 = gj * gs * res, y1 = (gj+1) * gs * res;
-        const tX = x0 + lerp(v00, v10, lev) * (x1 - x0), tY = y0;
-        const rX = x1, rY = y0 + lerp(v10, v11, lev) * (y1 - y0);
-        const bX = x0 + lerp(v01, v11, lev) * (x1 - x0), bY = y1;
-        const lX = x0, lY = y0 + lerp(v00, v01, lev) * (y1 - y0);
-        switch (c) {
-          case 1: case 14: ctx.moveTo(lX,lY); ctx.lineTo(bX,bY); break;
-          case 2: case 13: ctx.moveTo(bX,bY); ctx.lineTo(rX,rY); break;
-          case 3: case 12: ctx.moveTo(lX,lY); ctx.lineTo(rX,rY); break;
-          case 4: case 11: ctx.moveTo(tX,tY); ctx.lineTo(rX,rY); break;
-          case 5: ctx.moveTo(lX,lY); ctx.lineTo(tX,tY);
-                  ctx.moveTo(bX,bY); ctx.lineTo(rX,rY); break;
-          case 6: case 9: ctx.moveTo(tX,tY); ctx.lineTo(bX,bY); break;
-          case 7: case 8: ctx.moveTo(lX,lY); ctx.lineTo(tX,tY); break;
-          case 10: ctx.moveTo(tX,tY); ctx.lineTo(rX,rY);
-                   ctx.moveTo(lX,lY); ctx.lineTo(bX,bY); break;
-        }
-      }
-    }
-    ctx.stroke();
-  }
-
-  // Draw constraint set Q (only in MGC mode)
-  if (mode === 'mgc') {
-    const r = getRadius();
-    const wToC = (wx, wy) => worldToCanvas(wx, wy, canvas);
-    ctx.save();
-    cst().drawPath(ctx, canvas, r, wToC);
-    ctx.fillStyle = 'rgba(192,132,252,0.06)';
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(192,132,252,0.5)';
-    ctx.lineWidth = 2 * devicePixelRatio;
-    ctx.setLineDash([6 * devicePixelRatio, 4 * devicePixelRatio]);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.restore();
-  }
-
-  // Axes
-  ctx.strokeStyle = 'rgba(200,210,230,0.07)';
-  ctx.lineWidth = 1;
-  const [ax0, ay0] = worldToCanvas(v.xmin, 0, canvas);
-  const [ax1, ay1] = worldToCanvas(v.xmax, 0, canvas);
-  ctx.beginPath(); ctx.moveTo(ax0, ay0); ctx.lineTo(ax1, ay1); ctx.stroke();
-  const [bx0, by0] = worldToCanvas(0, v.ymin, canvas);
-  const [bx1, by1] = worldToCanvas(0, v.ymax, canvas);
-  ctx.beginPath(); ctx.moveTo(bx0, by0); ctx.lineTo(bx1, by1); ctx.stroke();
-
-  // Tick labels
-  ctx.fillStyle = '#4a5070';
-  ctx.font = `${10*devicePixelRatio}px JetBrains Mono`;
-  ctx.textAlign = 'center';
-  const tickStep = Math.max(1, Math.round((v.xmax - v.xmin) / 6));
-  for (let t = Math.ceil(v.xmin); t <= Math.floor(v.xmax); t += tickStep) {
-    if (t === 0) continue;
-    const [tx, ty] = worldToCanvas(t, 0, canvas);
-    ctx.fillText(t, tx, ty + 13*devicePixelRatio);
-  }
-  for (let t = Math.ceil(v.ymin); t <= Math.floor(v.ymax); t += tickStep) {
-    if (t === 0) continue;
-    const [tx, ty] = worldToCanvas(0, t, canvas);
-    ctx.fillText(t, tx - 13*devicePixelRatio, ty + 4*devicePixelRatio);
-  }
-
-  // Optimum
-  const xs = fnObj.xstar;
-  const [ox, oy] = worldToCanvas(xs[0], xs[1], canvas);
-  if (ox >= 0 && ox <= w && oy >= 0 && oy <= h) {
-    ctx.fillStyle = '#ffd166';
-    ctx.shadowColor = 'rgba(255,209,102,0.6)';
-    ctx.shadowBlur = 10*devicePixelRatio;
-    ctx.beginPath(); ctx.arc(ox, oy, 4.5*devicePixelRatio, 0, 2*Math.PI); ctx.fill();
-    ctx.shadowBlur = 0;
-    ctx.font = `${9*devicePixelRatio}px JetBrains Mono`;
-    ctx.fillStyle = '#ffd166';
-    ctx.textAlign = 'left';
-    ctx.fillText('x*', ox + 7*devicePixelRatio, oy - 5*devicePixelRatio);
-  }
-}
-
-function drawPath(ctx, canvas, pathSlice) {
-  if (pathSlice.length < 1) return;
-  const clr = mode === 'sgd' ? '#ff6b6b' : '#00e5a0';
-  const glow = mode === 'sgd' ? 'rgba(255,107,107,0.4)' : 'rgba(0,229,160,0.4)';
-
-  // Draw FW direction arrows in MGC mode
-  if (mode === 'mgc' && fwVertices.length > 0) {
-    ctx.save();
-    ctx.globalAlpha = 0.25;
-    ctx.strokeStyle = '#c084fc';
-    ctx.lineWidth = 1 * devicePixelRatio;
-    ctx.setLineDash([3 * devicePixelRatio, 3 * devicePixelRatio]);
-    for (let i = 0; i < Math.min(pathSlice.length - 1, fwVertices.length); i++) {
-      const [px, py] = worldToCanvas(pathSlice[i][0], pathSlice[i][1], canvas);
-      const [vx, vy] = worldToCanvas(fwVertices[i][0], fwVertices[i][1], canvas);
-      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(vx, vy); ctx.stroke();
-    }
-    ctx.setLineDash([]);
-    ctx.restore();
-  }
-
-  // Line
-  ctx.strokeStyle = clr;
-  ctx.lineWidth = 1.3 * devicePixelRatio;
-  ctx.globalAlpha = 0.7;
-  ctx.beginPath();
-  for (let i = 0; i < pathSlice.length; i++) {
-    const [px, py] = worldToCanvas(pathSlice[i][0], pathSlice[i][1], canvas);
-    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-  }
-  ctx.stroke();
-  ctx.globalAlpha = 1;
-
-  // FW vertex dots (MGC mode only)
-  if (mode === 'mgc' && fwVertices.length > 0) {
-    for (let i = 0; i < Math.min(pathSlice.length - 1, fwVertices.length); i++) {
-      const [vx, vy] = worldToCanvas(fwVertices[i][0], fwVertices[i][1], canvas);
-      ctx.fillStyle = '#c084fc';
-      ctx.globalAlpha = 0.5;
-      ctx.beginPath(); ctx.arc(vx, vy, 2*devicePixelRatio, 0, 2*Math.PI); ctx.fill();
-      ctx.globalAlpha = 1;
-    }
-  }
-
-  // Dots
-  for (let i = 0; i < pathSlice.length; i++) {
-    const [px, py] = worldToCanvas(pathSlice[i][0], pathSlice[i][1], canvas);
-    const isFirst = i === 0;
-    const isLast = i === pathSlice.length - 1;
-    ctx.fillStyle = isFirst ? '#ff6b6b' : clr;
-    ctx.shadowColor = isFirst ? 'rgba(255,107,107,0.5)' : glow;
-    ctx.shadowBlur = (isFirst || isLast) ? 7*devicePixelRatio : 0;
-    const r = (isFirst || isLast) ? 3.5 : 1.5;
-    ctx.beginPath(); ctx.arc(px, py, r*devicePixelRatio, 0, 2*Math.PI); ctx.fill();
-    ctx.shadowBlur = 0;
-  }
-}
-
-function drawConvergence(ctx, canvas, fHistSlice) {
-  const w = canvas.width, h = canvas.height;
-  ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = '#0c0e13';
-  ctx.fillRect(0, 0, w, h);
-
-  if (fHistSlice.length < 2) {
-    ctx.fillStyle = '#6b7394';
-    ctx.font = `${11*devicePixelRatio}px JetBrains Mono`;
-    ctx.textAlign = 'center';
-    ctx.fillText('Run to see convergence', w/2, h/2);
-    return;
-  }
-
-  // Compute f*
-  const fnObj = fn();
-  const p = fnP();
-  let fStar;
-  if (mode === 'mgc') {
-    const r = getRadius();
-    const xs = fnObj.xstar;
-    if (cst().contains(xs[0], xs[1], r)) {
-      fStar = fnObj.f(xs[0], xs[1], p);
-    } else {
-      const [px, py] = cst().project(xs[0], xs[1], r);
-      fStar = fnObj.f(px, py, p);
-      fStar = Math.min(fStar, ...fHistSlice);
-    }
-  } else {
-    fStar = fnObj.f(fnObj.xstar[0], fnObj.xstar[1], p);
-  }
-
-  const gaps = fHistSlice.map(v => Math.max(v - fStar, 1e-18));
-  const logGaps = gaps.map(v => Math.log10(v));
-
-  // Also plot duality gap in MGC mode
-  const showDualGap = mode === 'mgc' && gapHist.length > 0;
-  const gapSlice = showDualGap ? gapHist.slice(0, fHistSlice.length) : [];
-  const logDualGap = gapSlice.map(v => Math.log10(Math.max(v, 1e-18)));
-
-  const pad = { l: 52*devicePixelRatio, r: 16*devicePixelRatio, t: 16*devicePixelRatio, b: 34*devicePixelRatio };
-  const pw = w - pad.l - pad.r;
-  const ph = h - pad.t - pad.b;
-
-  const allLog = [...logGaps.filter(v => isFinite(v)), ...logDualGap.filter(v => isFinite(v))];
-  let yMin = allLog.length > 0 ? Math.floor(Math.min(...allLog)) - 0.5 : -10;
-  let yMax = allLog.length > 0 ? Math.ceil(Math.max(...allLog)) + 0.5 : 5;
-  if (yMax - yMin < 2) { yMin -= 1; yMax += 1; }
-  const xMax = fHistSlice.length - 1;
-
-  // Grid
-  ctx.strokeStyle = 'rgba(200,210,230,0.06)';
-  ctx.lineWidth = 1;
-  for (let yl = Math.ceil(yMin); yl <= Math.floor(yMax); yl++) {
-    const py = pad.t + (1 - (yl - yMin)/(yMax - yMin)) * ph;
-    ctx.beginPath(); ctx.moveTo(pad.l, py); ctx.lineTo(pad.l + pw, py); ctx.stroke();
-    ctx.fillStyle = '#6b7394';
-    ctx.font = `${9*devicePixelRatio}px JetBrains Mono`;
-    ctx.textAlign = 'right';
-    ctx.fillText(`10^${yl}`, pad.l - 5*devicePixelRatio, py + 3*devicePixelRatio);
-  }
-
-  ctx.textAlign = 'center';
-  const step = Math.max(1, Math.floor(xMax/5));
-  for (let i = 0; i <= xMax; i += step) {
-    const px = pad.l + (i/Math.max(xMax,1)) * pw;
-    ctx.fillText(i, px, h - 10*devicePixelRatio);
-  }
-  ctx.fillText('iteration k', pad.l + pw/2, h - 1*devicePixelRatio);
-
-  // f(xᵏ) − f* curve
-  const curveClr = mode === 'sgd' ? '#ff6b6b' : '#00e5a0';
-  const curveGlow = mode === 'sgd' ? 'rgba(255,107,107,0.3)' : 'rgba(0,229,160,0.3)';
-  ctx.strokeStyle = curveClr;
-  ctx.lineWidth = 2*devicePixelRatio;
-  ctx.shadowColor = curveGlow;
-  ctx.shadowBlur = 5*devicePixelRatio;
-  ctx.beginPath();
-  for (let i = 0; i < logGaps.length; i++) {
-    if (!isFinite(logGaps[i])) continue;
-    const px = pad.l + (i/Math.max(xMax,1)) * pw;
-    const py = pad.t + (1 - (logGaps[i] - yMin)/(yMax - yMin)) * ph;
-    const cpy = Math.max(pad.t, Math.min(pad.t + ph, py));
-    if (i === 0) ctx.moveTo(px, cpy); else ctx.lineTo(px, cpy);
-  }
-  ctx.stroke();
-  ctx.shadowBlur = 0;
-
-  // Duality gap curve (MGC only)
-  if (showDualGap) {
-    ctx.strokeStyle = '#c084fc';
-    ctx.lineWidth = 1.5*devicePixelRatio;
-    ctx.shadowColor = 'rgba(192,132,252,0.3)';
-    ctx.shadowBlur = 4*devicePixelRatio;
-    ctx.setLineDash([4*devicePixelRatio, 3*devicePixelRatio]);
-    ctx.beginPath();
-    for (let i = 0; i < logDualGap.length; i++) {
-      if (!isFinite(logDualGap[i])) continue;
-      const px = pad.l + (i/Math.max(xMax,1)) * pw;
-      const py = pad.t + (1 - (logDualGap[i] - yMin)/(yMax - yMin)) * ph;
-      const cpy = Math.max(pad.t, Math.min(pad.t + ph, py));
-      if (i === 0) ctx.moveTo(px, cpy); else ctx.lineTo(px, cpy);
-    }
-    ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.shadowBlur = 0;
-  }
-
-  // Y label
-  ctx.save();
-  ctx.translate(10*devicePixelRatio, pad.t + ph/2);
-  ctx.rotate(-Math.PI/2);
-  ctx.fillStyle = '#6b7394';
-  ctx.font = `${9*devicePixelRatio}px JetBrains Mono`;
-  ctx.textAlign = 'center';
-  ctx.fillText('log₁₀(f(xᵏ) − f*)', 0, 0);
-  ctx.restore();
-
-  // Mode label
-  ctx.font = `bold ${10*devicePixelRatio}px JetBrains Mono`;
-  ctx.textAlign = 'right';
-  const modeLabel = mode === 'sgd' ? 'SGD' : mode === 'mgc' ? 'FW' : 'GD';
-  ctx.fillStyle = curveClr;
-  ctx.fillText(modeLabel, w - pad.r, pad.t + 12*devicePixelRatio);
-  if (showDualGap) {
-    ctx.fillStyle = '#c084fc';
-    ctx.fillText('--- gap', w - pad.r, pad.t + 24*devicePixelRatio);
-  }
-}
-
-// =====================================================================
-// LINE SEARCH HELPERS
-// =====================================================================
-function exactLineSearch2D(x, y, gx, gy) {
-  let a = 0, b = 1;
-  const phi = (1 + Math.sqrt(5)) / 2;
-  const p = fnP();
-  const fLine = (alpha) => fn().f(x - alpha*gx, y - alpha*gy, p);
-  while (fLine(b) < fLine(a) && b < 100) b *= 2;
-  for (let i = 0; i < 50; i++) {
-    const x1 = b - (b-a)/phi;
-    const x2 = a + (b-a)/phi;
-    if (fLine(x1) < fLine(x2)) b = x2; else a = x1;
-  }
-  return (a+b)/2;
-}
-
-function backtrack(x, y, gx, gy) {
-  const c_arm = parseFloat(document.getElementById('cSlider').value);
-  const rho_arm = parseFloat(document.getElementById('rhoSlider').value);
-  let alpha = 1.0;
-  const p = fnP();
-  const fk = fn().f(x, y, p);
-  const gn2 = gx*gx + gy*gy;
-  for (let t = 0; t < 80; t++) {
-    if (fn().f(x - alpha*gx, y - alpha*gy, p) <= fk - c_arm*alpha*gn2) return alpha;
-    alpha *= rho_arm;
-  }
-  return alpha;
-}
-
-function lineSearchFW(x, y, sx, sy) {
-  const dx = sx - x, dy = sy - y;
-  const p = fnP();
-  const fLine = (a) => fn().f(x + a*dx, y + a*dy, p);
-  let a = 0, b = 1;
-  const phi = (1 + Math.sqrt(5)) / 2;
-  for (let i = 0; i < 50; i++) {
-    const x1 = b - (b-a)/phi;
-    const x2 = a + (b-a)/phi;
-    if (fLine(x1) < fLine(x2)) b = x2; else a = x1;
-  }
-  return (a+b)/2;
-}
-
-// =====================================================================
-// OPTIMIZATION ENGINE
-// =====================================================================
-function runOptimizer() {
-  const maxIter = parseInt(document.getElementById('maxIterSlider').value);
-  const fnObj = fn();
-  const p = fnP();
-  const eps = 1e-12;
-
-  let x = startPt[0], y = startPt[1];
-
-  // In MGC mode, ensure feasibility
-  if (mode === 'mgc') {
-    const r = getRadius();
-    if (!cst().contains(x, y, r)) {
-      [x, y] = cst().project(x, y, r);
-    }
-  }
-
-  path = [[x, y]];
-  fHist = [fnObj.f(x, y, p)];
-  alphaHist = [];
-  gapHist = [];
-  fwVertices = [];
-
-  if (mode === 'sgd') buildSGDComponents();
-
-  const decay = parseFloat(document.getElementById('decaySlider').value);
-  const baseAlpha = parseFloat(document.getElementById('alphaSlider').value);
-  const mgcAlpha = parseFloat(document.getElementById('mgcAlphaSlider').value);
-
-  for (let k = 0; k < maxIter; k++) {
-    let gx, gy, alpha;
-
-    if (mode === 'gd') {
-      [gx, gy] = fnObj.grad(x, y, p);
-      const gn = Math.sqrt(gx*gx + gy*gy);
-      if (gn < eps) break;
-      if (strategy === 'fixed') alpha = baseAlpha;
-      else if (strategy === 'exact') alpha = exactLineSearch2D(x, y, gx, gy);
-      else alpha = backtrack(x, y, gx, gy);
-      x = x - alpha * gx;
-      y = y - alpha * gy;
-
-    } else if (mode === 'sgd') {
-      [gx, gy] = stochGrad(x, y);
-      alpha = baseAlpha / (1 + k / decay);
-      x = x - alpha * gx;
-      y = y - alpha * gy;
-
-    } else {
-      // MGC (Frank-Wolfe / Conditional Gradient)
-      const r = getRadius();
-      [gx, gy] = fnObj.grad(x, y, p);
-
-      // LMO: φ_Q(xᵏ) = argmin_{z∈Q} ∇f(xᵏ)ᵀz
-      const [sx, sy] = cst().lmo(gx, gy, r);
-      fwVertices.push([sx, sy]);
-
-      // Duality gap
-      const gap = gx*(x - sx) + gy*(y - sy);
-      gapHist.push(gap);
-      if (gap < eps) break;
-
-      // Step size
-      if (mgcStrategy === 'standard') alpha = 2.0 / (k + 2);
-      else if (mgcStrategy === 'fixed') alpha = mgcAlpha;
-      else alpha = lineSearchFW(x, y, sx, sy);
-
-      // Update: xᵏ⁺¹ = xᵏ + αₖ(φ_Q(xᵏ) − xᵏ)
-      x = x + alpha * (sx - x);
-      y = y + alpha * (sy - y);
-    }
-
-    path.push([x, y]);
-    fHist.push(fnObj.f(x, y, p));
-    alphaHist.push(alpha);
-
-    if (!isFinite(x) || !isFinite(y) || Math.abs(x) > 1e6 || Math.abs(y) > 1e6) break;
-  }
-}
-
-// =====================================================================
-// ANIMATION
-// =====================================================================
-function animate() {
-  if (animIdx >= path.length) {
-    updateStats(path.length - 1);
-    return;
-  }
-  animIdx = Math.min(animIdx + Math.max(1, Math.floor(path.length / 100)), path.length);
-  drawContours(ctxC, cC);
-  drawPath(ctxC, cC, path.slice(0, animIdx));
-  drawConvergence(ctxV, cV, fHist.slice(0, animIdx));
-  updateStats(animIdx - 1);
-  animFrame = requestAnimationFrame(animate);
-}
-
-function updateStats(idx) {
-  if (idx < 0) idx = 0;
-  const p = fnP();
-  document.getElementById('statIter').textContent = idx;
-  document.getElementById('statF').textContent = fHist[idx] !== undefined ? fHist[idx].toExponential(4) : '—';
-
-  if (path[idx]) {
-    const g = fn().grad(path[idx][0], path[idx][1], p);
-    document.getElementById('statGrad').textContent = Math.sqrt(g[0]**2+g[1]**2).toExponential(3);
-  }
-
-  if (mode === 'mgc') {
-    document.getElementById('statGap').textContent =
-      gapHist[idx] !== undefined ? gapHist[idx].toExponential(3) : '—';
-  }
-
-  document.getElementById('statAlpha').textContent =
-    alphaHist[idx-1] !== undefined ? alphaHist[idx-1].toFixed(6) : '—';
-
-  const last = path[Math.min(idx, path.length-1)];
-  if (last && (!isFinite(last[0]) || !isFinite(last[1]) || Math.abs(last[0]) > 1e5)) {
-    document.getElementById('statStatus').textContent = 'DIVERGED ✗';
-    document.getElementById('statStatus').style.color = '#ff6b6b';
-  } else if (idx >= path.length - 1 && path.length > 1) {
-    if (mode === 'mgc') {
-      const gap = gapHist[gapHist.length - 1] || Infinity;
-      document.getElementById('statStatus').textContent = gap < 1e-4 ? 'Converged ✓' : 'Max iter reached';
-      document.getElementById('statStatus').style.color = gap < 1e-4 ? '#00e5a0' : '#ffd166';
-    } else {
-      const g = fn().grad(last[0], last[1], p);
-      const gn = Math.sqrt(g[0]**2+g[1]**2);
-      document.getElementById('statStatus').textContent = gn < 1e-4 ? 'Converged ✓' : 'Max iter reached';
-      document.getElementById('statStatus').style.color = gn < 1e-4 ? '#00e5a0' : '#ffd166';
-    }
-  } else {
-    document.getElementById('statStatus').textContent = 'Running…';
-    document.getElementById('statStatus').style.color = '#61afff';
-  }
-}
-
-// =====================================================================
-// UI UPDATES
-// =====================================================================
-function updateFormulaBar() {
-  const fnObj = fn();
-  const p = fnP();
-  document.getElementById('formulaDisplay').textContent = fnObj.expr;
-  document.getElementById('propXstar').textContent = `(${fnObj.xstar[0]}, ${fnObj.xstar[1]})`;
-
-  if (mode === 'mgc') {
-    document.getElementById('propL').parentElement.style.display = 'none';
-    document.getElementById('propSigma').parentElement.style.display = 'none';
-    document.getElementById('propKappa').parentElement.style.display = 'none';
-    document.getElementById('propQWrap').style.display = '';
-    document.getElementById('propRWrap').style.display = '';
-    document.getElementById('propQ').textContent = cst().label;
-    document.getElementById('propR').textContent = getRadius().toFixed(1);
-  } else {
-    document.getElementById('propL').parentElement.style.display = '';
-    document.getElementById('propSigma').parentElement.style.display = '';
-    document.getElementById('propKappa').parentElement.style.display = '';
-    document.getElementById('propQWrap').style.display = 'none';
-    document.getElementById('propRWrap').style.display = 'none';
-    document.getElementById('propL').textContent = p.L ? p.L.toFixed(1) : '≈' + (p.L||'?');
-    document.getElementById('propSigma').textContent = fnObj.usesKappa ? (p.sig||1).toFixed(2) : '—';
-    const kappa = parseInt(document.getElementById('condSlider').value);
-    document.getElementById('propKappa').textContent = fnObj.usesKappa ? kappa : '—';
-  }
-
-  // Info box (per-mode text)
-  const info = fnObj.info;
-  document.getElementById('infoBox').innerHTML = typeof info === 'string' ? info : (info[mode] || info.gd);
-}
-
-function updateModeUI() {
-  const isGD = mode === 'gd';
-  const isSGD = mode === 'sgd';
-  const isMGC = mode === 'mgc';
-
-  // Show/hide mode-specific control groups
-  document.getElementById('strategyGroup').style.display = isGD ? '' : 'none';
-  document.getElementById('sgdParams').style.display = isSGD ? '' : 'none';
-  document.getElementById('constraintGroup').style.display = isMGC ? '' : 'none';
-  document.getElementById('mgcStrategyGroup').style.display = isMGC ? '' : 'none';
-  document.getElementById('radiusRow').style.display = isMGC ? '' : 'none';
-
-  // Alpha slider logic
-  if (isMGC) {
-    document.getElementById('alphaRow').style.display = 'none';
-    document.getElementById('cRow').style.display = 'none';
-    document.getElementById('rhoRow').style.display = 'none';
-    document.getElementById('mgcAlphaRow').style.display = mgcStrategy === 'fixed' ? '' : 'none';
-  } else {
-    document.getElementById('mgcAlphaRow').style.display = 'none';
-    if (isSGD) {
-      document.getElementById('alphaRow').style.display = '';
-      document.getElementById('cRow').style.display = 'none';
-      document.getElementById('rhoRow').style.display = 'none';
-      const alphaLabel = document.querySelector('#alphaRow label');
-      alphaLabel.innerHTML = `Initial step α₀ <span id="alphaVal">${parseFloat(document.getElementById('alphaSlider').value).toFixed(4)}</span>`;
-    } else {
-      const alphaLabel = document.querySelector('#alphaRow label');
-      alphaLabel.innerHTML = `Step size α <span id="alphaVal">${parseFloat(document.getElementById('alphaSlider').value).toFixed(4)}</span>`;
-      updateStrategyUI();
-    }
-  }
-
-  // Duality gap row
-  document.getElementById('statGapRow').style.display = isMGC ? '' : 'none';
-
-  // Labels
-  document.getElementById('contourLabel').textContent = isMGC
-    ? 'Contour Plot + Constraint Set Q + Iterates'
-    : 'Contour Plot + Iterates';
-  document.getElementById('convLabel').textContent = isMGC
-    ? 'Convergence: f(xᵏ) − f* & Duality Gap'
-    : 'Convergence: f(xᵏ) − f*';
-  document.getElementById('clickHint').textContent = isMGC
-    ? 'Click inside Q to set x⁰'
-    : 'Click to set x⁰';
-
-  // Legend
-  const legend = document.getElementById('legendArea');
-  if (isMGC) {
-    legend.innerHTML = `
-      <div class="legend-item"><div class="legend-dot" style="background:var(--accent1)"></div> Iterates xᵏ</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div> Starting x⁰</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--accent5)"></div> FW vertex φ_Q(xᵏ)</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--accent4)"></div> Optimum x*</div>
-      <div class="legend-item"><div class="legend-dot" style="background:rgba(192,132,252,0.15);border:1px solid var(--accent5)"></div> Constraint set Q</div>`;
-  } else {
-    legend.innerHTML = `
-      <div class="legend-item"><div class="legend-dot" style="background:var(--accent1)"></div> Iterates xᵏ</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div> Starting x⁰</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--accent4)"></div> Optimum x*</div>`;
-  }
-
-  // Set reasonable starting point
-  if (isMGC) {
-    const r = getRadius();
-    if (constraintType === 'simplex') startPt = [r * 0.3, r * 0.2];
-    else startPt = [r * 0.5, -r * 0.3];
-  } else {
-    const v = fn().view;
-    startPt = [v.xmin + (v.xmax-v.xmin)*0.2, v.ymin + (v.ymax-v.ymin)*0.75];
-  }
-
-  updateFormulaBar();
-  resetVis();
-}
-
-function updateStrategyUI() {
-  document.getElementById('alphaRow').style.display = strategy === 'fixed' ? '' : 'none';
-  document.getElementById('cRow').style.display = strategy === 'backtrack' ? '' : 'none';
-  document.getElementById('rhoRow').style.display = strategy === 'backtrack' ? '' : 'none';
-  if (mode === 'sgd') document.getElementById('alphaRow').style.display = '';
-}
-
-function buildFnList() {
-  const list = document.getElementById('fnList');
-  list.innerHTML = '';
-  FUNCTIONS.forEach((fnDef, i) => {
-    const card = document.createElement('button');
-    card.className = 'fn-card' + (i === currentFnIdx ? ' active' : '');
-    card.innerHTML = `<div class="fn-name">${fnDef.name}</div><div class="fn-expr">${fnDef.expr}</div>`;
-    card.addEventListener('click', () => {
-      currentFnIdx = i;
-      document.querySelectorAll('.fn-card').forEach(c => c.classList.remove('active'));
-      card.classList.add('active');
-      document.getElementById('condRow').style.display = fnDef.usesKappa ? '' : 'none';
-
-      if (mode === 'mgc') {
-        const r = getRadius();
-        if (constraintType === 'simplex') startPt = [r * 0.3, r * 0.2];
-        else startPt = [r * 0.5, -r * 0.3];
-      } else {
-        const v = fnDef.view;
-        startPt = [v.xmin + (v.xmax-v.xmin)*0.2, v.ymin + (v.ymax-v.ymin)*0.75];
-      }
-
-      updateFormulaBar();
-      resetVis();
-    });
-    list.appendChild(card);
-  });
-}
-
-function resetVis() {
-  if (animFrame) cancelAnimationFrame(animFrame);
-  path = []; fHist = []; alphaHist = []; gapHist = []; fwVertices = []; animIdx = 0;
-  drawContours(ctxC, cC);
-
-  // Ensure start is feasible in MGC mode
-  if (mode === 'mgc') {
-    const r = getRadius();
-    if (!cst().contains(startPt[0], startPt[1], r)) {
-      startPt = cst().project(startPt[0], startPt[1], r);
-    }
-  }
-
-  // Show starting point preview
-  const [px, py] = worldToCanvas(startPt[0], startPt[1], cC);
-  ctxC.fillStyle = '#ff6b6b';
-  ctxC.shadowColor = 'rgba(255,107,107,0.6)';
-  ctxC.shadowBlur = 10*devicePixelRatio;
-  ctxC.beginPath(); ctxC.arc(px, py, 5*devicePixelRatio, 0, 2*Math.PI); ctxC.fill();
-  ctxC.shadowBlur = 0;
-  drawConvergence(ctxV, cV, []);
-  document.getElementById('statIter').textContent = '—';
-  document.getElementById('statF').textContent = '—';
-  document.getElementById('statGrad').textContent = '—';
-  document.getElementById('statGap').textContent = '—';
-  document.getElementById('statAlpha').textContent = '—';
-  document.getElementById('statStatus').textContent = 'Ready';
-  document.getElementById('statStatus').style.color = '';
-}
-
-// =====================================================================
-// EVENT HANDLERS
-// =====================================================================
-// Mode toggle
-document.querySelectorAll('#modeToggle .toggle-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('#modeToggle .toggle-btn').forEach(b => {
-      b.classList.remove('active', 'active-sgd', 'active-mgc');
-    });
-    mode = btn.dataset.mode;
-    if (mode === 'sgd') btn.classList.add('active-sgd');
-    else if (mode === 'mgc') btn.classList.add('active-mgc');
-    else btn.classList.add('active');
-    updateModeUI();
-  });
-});
-
-// GD Strategy
-document.querySelectorAll('#strategyGroup .strategy-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('#strategyGroup .strategy-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    strategy = btn.dataset.s;
-    updateStrategyUI();
-  });
-});
-
-// Constraint set buttons
-document.querySelectorAll('#constraintBtns .constraint-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('#constraintBtns .constraint-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    constraintType = btn.dataset.q;
-    const r = getRadius();
-    if (constraintType === 'simplex') startPt = [r * 0.3, r * 0.2];
-    else startPt = [r * 0.5, -r * 0.3];
-    updateFormulaBar();
-    resetVis();
-  });
-});
-
-// MGC step-size strategy buttons
-document.querySelectorAll('#mgcStepBtns .strategy-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('#mgcStepBtns .strategy-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    mgcStrategy = btn.dataset.ms;
-    document.getElementById('mgcAlphaRow').style.display = mgcStrategy === 'fixed' ? '' : 'none';
-  });
-});
-
-// Sliders
-document.getElementById('alphaSlider').addEventListener('input', e => {
-  document.getElementById('alphaVal').textContent = parseFloat(e.target.value).toFixed(4);
-});
-document.getElementById('cSlider').addEventListener('input', e => {
-  document.getElementById('cVal').textContent = parseFloat(e.target.value).toFixed(2);
-});
-document.getElementById('rhoSlider').addEventListener('input', e => {
-  document.getElementById('rhoVal').textContent = parseFloat(e.target.value).toFixed(2);
-});
-document.getElementById('maxIterSlider').addEventListener('input', e => {
-  document.getElementById('maxIterVal').textContent = e.target.value;
-});
-document.getElementById('condSlider').addEventListener('input', e => {
-  document.getElementById('condVal').textContent = e.target.value;
-  updateFormulaBar();
-  resetVis();
-});
-document.getElementById('batchSlider').addEventListener('input', e => {
-  document.getElementById('batchVal').textContent = e.target.value;
-});
-document.getElementById('decaySlider').addEventListener('input', e => {
-  document.getElementById('decayVal').textContent = e.target.value;
-});
-document.getElementById('sampSlider').addEventListener('input', e => {
-  document.getElementById('sampVal').textContent = e.target.value;
-});
-document.getElementById('radiusSlider').addEventListener('input', e => {
-  document.getElementById('radiusVal').textContent = parseFloat(e.target.value).toFixed(2);
-  const r = parseFloat(e.target.value);
-  if (constraintType === 'simplex') startPt = [r * 0.3, r * 0.2];
-  else startPt = [r * 0.5, -r * 0.3];
-  updateFormulaBar();
-  resetVis();
-});
-document.getElementById('mgcAlphaSlider').addEventListener('input', e => {
-  document.getElementById('mgcAlphaVal').textContent = parseFloat(e.target.value).toFixed(2);
-});
-
-// Buttons
-document.getElementById('runBtn').addEventListener('click', () => {
-  if (animFrame) cancelAnimationFrame(animFrame);
-  runOptimizer();
-  animIdx = 0;
-  animate();
-});
-
-document.getElementById('stepBtn').addEventListener('click', () => {
-  if (path.length === 0) { runOptimizer(); animIdx = 0; }
-  if (animFrame) cancelAnimationFrame(animFrame);
-  animIdx = Math.min(animIdx + 1, path.length);
-  drawContours(ctxC, cC);
-  drawPath(ctxC, cC, path.slice(0, animIdx));
-  drawConvergence(ctxV, cV, fHist.slice(0, animIdx));
-  updateStats(animIdx - 1);
-});
-
-document.getElementById('resetBtn').addEventListener('click', resetVis);
-
-// Click to set starting point
-cC.addEventListener('click', e => {
-  const [wx, wy] = canvasToWorld(e.clientX, e.clientY, cC);
-  if (mode === 'mgc') {
-    const r = getRadius();
-    if (cst().contains(wx, wy, r)) {
-      startPt = [wx, wy];
-      resetVis();
-    }
-  } else {
-    const v = getView();
-    if (wx >= v.xmin && wx <= v.xmax && wy >= v.ymin && wy <= v.ymax) {
-      startPt = [wx, wy];
-      resetVis();
-    }
-  }
-});
-
-// =====================================================================
-// INIT
-// =====================================================================
-window.addEventListener('resize', () => {
-  resizeCanvases();
-  if (path.length > 0) {
-    drawContours(ctxC, cC);
-    drawPath(ctxC, cC, path.slice(0, animIdx));
-    drawConvergence(ctxV, cV, fHist.slice(0, animIdx));
-  } else {
-    drawContours(ctxC, cC);
-    drawConvergence(ctxV, cV, []);
-  }
-});
-
-buildFnList();
-resizeCanvases();
-updateFormulaBar();
-updateModeUI();
-resetVis();
+const FUNCTIONS=[{id:'quadratic',name:'Quadratic (diagonal)',expr:'f(x) = ½(κ·x₁² + x₂²)',view:{xmin:-5,xmax:5,ymin:-5,ymax:5},usesKappa:true,xstar:[0,0],f:(x,y,p)=>0.5*(p.L*x*x+p.sig*y*y),grad:(x,y,p)=>[p.L*x,p.sig*y],getParams:k=>({L:k,sig:1}),info:{gd:'<strong>Diagonal quadratic.</strong> Eigenvalues L and σ. When κ is large, contours elongate and GD zig-zags.<br><br>Optimal step: <code>α = 2/(L+σ)</code>. Diverges if <code>α > 2/L</code>.',sgd:'<strong>Diagonal quadratic.</strong> SGD decomposes f into m stochastic components.<br><br>Larger batch N → less noise → more like GD.',pgd:'<strong>Diagonal quadratic.</strong> When Q doesn\'t contain the origin, PGD converges to the boundary.<br><br>Watch the <strong>ghost dots</strong> (dim blue) — those are the unconstrained GD steps before projection snaps them back to Q.',mgc:'<strong>Diagonal quadratic.</strong> When Q doesn\'t contain the origin, watch FW zig-zag along the boundary!<br><br>The <strong>duality gap</strong> gₖ = ∇f(xᵏ)ᵀ(xᵏ − φ_Q(xᵏ)) is a computable convergence certificate.'}},{id:'quadratic_rotated',name:'Quadratic (rotated)',expr:'f(x) = ½ xᵀHx, H = RᵀΛR (45° rotation)',view:{xmin:-5,xmax:5,ymin:-5,ymax:5},usesKappa:true,xstar:[0,0],f:(x,y,p)=>{const c=Math.cos(p.theta),s=Math.sin(p.theta),u=c*x+s*y,v=-s*x+c*y;return 0.5*(p.L*u*u+p.sig*v*v);},grad:(x,y,p)=>{const c=Math.cos(p.theta),s=Math.sin(p.theta),u=c*x+s*y,v=-s*x+c*y;return[c*p.L*u-s*p.sig*v,s*p.L*u+c*p.sig*v];},getParams:k=>({L:k,sig:1,theta:Math.PI/4}),info:{gd:'<strong>Rotated quadratic.</strong> Axes tilted 45°. GD doesn\'t align with eigenvectors → more zig-zagging.',sgd:'<strong>Rotated quadratic.</strong> Rotation misaligns gradient with coordinate axes. Compare with diagonal.',pgd:'<strong>Rotated quadratic.</strong> Compare L₁ vs L₂ ball — the L₁ ball\'s sharp corners create interesting projection patterns.',mgc:'<strong>Rotated quadratic.</strong> Compare L₁ vs L₂ — the L₁ ball\'s FW vertices jump between axis-aligned corners.'}},{id:'rosenbrock',name:'Rosenbrock',expr:'f(x) = 100(x₂ − x₁²)² + (1 − x₁)²',view:{xmin:-2.5,xmax:2.5,ymin:-1.5,ymax:3.5},usesKappa:false,xstar:[1,1],f:(x,y)=>100*(y-x*x)**2+(1-x)**2,grad:(x,y)=>[-400*x*(y-x*x)-2*(1-x),200*(y-x*x)],getParams:()=>({L:1600}),info:{gd:'<strong>Rosenbrock banana.</strong> Convex valley, min at (1,1). GD finds the valley fast but crawls along it.',sgd:'<strong>Rosenbrock banana.</strong> The narrow valley is hard even for SGD. Try large batch sizes.',pgd:'<strong>Rosenbrock banana.</strong> When (1,1) is inside Q, PGD behaves like GD. With small r, iterates hug Q\'s boundary.',mgc:'<strong>Rosenbrock banana.</strong> FW selects different vertices as gradient changes along the valley. Rate is O(1/k).'}},{id:'beale',name:'Beale',expr:'f(x) = Σᵢ (cᵢ − x₁(1−x₂ⁱ))²',view:{xmin:-1,xmax:4,ymin:-1,ymax:2.5},usesKappa:false,xstar:[3,0.5],f:(x,y)=>{const t1=1.5-x*(1-y),t2=2.25-x*(1-y*y),t3=2.625-x*(1-y*y*y);return t1*t1+t2*t2+t3*t3;},grad:(x,y)=>{const t1=1.5-x*(1-y),t2=2.25-x*(1-y*y),t3=2.625-x*(1-y*y*y);return[-2*t1*(1-y)-2*t2*(1-y*y)-2*t3*(1-y*y*y),2*t1*x+2*t2*2*x*y+2*t3*3*x*y*y];},getParams:()=>({L:200}),info:{gd:'<strong>Beale function.</strong> Min at (3, 0.5). Flat regions slow gradient methods. Good for testing backtracking.',sgd:'<strong>Beale function.</strong> Flat regions cause vanishing gradients. SGD noise can help explore.',pgd:'<strong>Beale function.</strong> PGD may oscillate near Q\'s boundary in low-gradient zones.',mgc:'<strong>Beale function.</strong> Try different constraint radii to see how the feasible region affects convergence.'}},{id:'himmelblau',name:'Himmelblau',expr:'f(x) = (x₁² + x₂ − 11)² + (x₁ + x₂² − 7)²',view:{xmin:-5,xmax:5,ymin:-5,ymax:5},usesKappa:false,xstar:[3,2],f:(x,y)=>(x*x+y-11)**2+(x+y*y-7)**2,grad:(x,y)=>[4*x*(x*x+y-11)+2*(x+y*y-7),2*(x*x+y-11)+4*y*(x+y*y-7)],getParams:()=>({L:300}),info:{gd:'<strong>Himmelblau.</strong> 4 identical minima. Click different starting points to see which one GD finds!',sgd:'<strong>Himmelblau.</strong> SGD noise can sometimes help escape from one basin to another.',pgd:'<strong>Himmelblau.</strong> The constraint set restricts reachable basins. Compare PGD vs FW on the same Q.',mgc:'<strong>Himmelblau.</strong> Which minimum does FW find? Depends on x⁰ and Q\'s geometry.'}},{id:'styblinski',name:'Styblinski-Tang',expr:'f(x) = ½ Σᵢ (xᵢ⁴ − 16xᵢ² + 5xᵢ)',view:{xmin:-5,xmax:5,ymin:-5,ymax:5},usesKappa:false,xstar:[-2.9035,-2.9035],f:(x,y)=>0.5*((x**4-16*x*x+5*x)+(y**4-16*y*y+5*y)),grad:(x,y)=>[0.5*(4*x**3-32*x+5),0.5*(4*y**3-32*y+5)],getParams:()=>({L:200}),info:{gd:'<strong>Styblinski-Tang.</strong> Multiple local minima. Global min at ≈(−2.9, −2.9). GD gets trapped.',sgd:'<strong>Styblinski-Tang.</strong> SGD noise may help escape shallow basins. Try high noise + slow decay.',pgd:'<strong>Styblinski-Tang.</strong> A small Q isolates a single basin. PGD\'s linear rate beats FW here.',mgc:'<strong>Styblinski-Tang.</strong> FW\'s sublinear O(1/k) rate is clearly visible. Compare with PGD!'}},{id:'shifted_quadratic',name:'Shifted Quadratic',expr:'f(x) = ½((x₁−3)² + (x₂−2)²)',view:{xmin:-2,xmax:5,ymin:-2,ymax:4},usesKappa:false,xstar:[3,2],f:(x,y)=>0.5*((x-3)**2+(y-2)**2),grad:(x,y)=>[x-3,y-2],getParams:()=>({L:1,sig:1}),info:{gd:'<strong>Shifted quadratic.</strong> Isotropic, min at (3, 2). Easy for GD.',sgd:'<strong>Shifted quadratic.</strong> Good baseline to see how noise affects convergence.',pgd:'<strong>Shifted quadratic.</strong> With small r the min lies outside Q. PGD converges linearly to Π_Q(x*).<br><br>Compare: PGD is <strong>linear</strong> O(ρᵏ), FW is <strong>sublinear</strong> O(1/k).',mgc:'<strong>Shifted quadratic.</strong> Min at (3, 2) lies outside small Q. FW always stays feasible — iterates are convex combinations of vertices.'}}];
+
+const CONSTRAINTS={l2:{name:'L₂ ball',label:'‖x‖₂ ≤ r',lmo:(gx,gy,r)=>{const n=Math.sqrt(gx*gx+gy*gy);return n<1e-15?[0,0]:[-r*gx/n,-r*gy/n];},contains:(x,y,r)=>x*x+y*y<=r*r+1e-10,project:(x,y,r)=>{const n=Math.sqrt(x*x+y*y);return n<=r?[x,y]:[r*x/n,r*y/n];},drawPath:(ctx,c,r,w)=>{const N=100;ctx.beginPath();for(let i=0;i<=N;i++){const t=2*Math.PI*i/N,p=w(r*Math.cos(t),r*Math.sin(t));i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]);}ctx.closePath();}},l1:{name:'L₁ ball',label:'‖x‖₁ ≤ r',lmo:(gx,gy,r)=>Math.abs(gx)>=Math.abs(gy)?[-r*Math.sign(gx||1),0]:[0,-r*Math.sign(gy||1)],contains:(x,y,r)=>Math.abs(x)+Math.abs(y)<=r+1e-10,project:(x,y,r)=>{if(Math.abs(x)+Math.abs(y)<=r)return[x,y];const sx=Math.sign(x),sy=Math.sign(y),mu=(Math.abs(x)+Math.abs(y)-r)/2;return[sx*Math.max(0,Math.abs(x)-mu),sy*Math.max(0,Math.abs(y)-mu)];},drawPath:(ctx,c,r,w)=>{ctx.beginPath();[[r,0],[0,r],[-r,0],[0,-r]].forEach((v,i)=>{const p=w(v[0],v[1]);i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]);});ctx.closePath();}},linf:{name:'L∞ ball',label:'‖x‖∞ ≤ r',lmo:(gx,gy,r)=>[-r*Math.sign(gx||1),-r*Math.sign(gy||1)],contains:(x,y,r)=>Math.max(Math.abs(x),Math.abs(y))<=r+1e-10,project:(x,y,r)=>[Math.max(-r,Math.min(r,x)),Math.max(-r,Math.min(r,y))],drawPath:(ctx,c,r,w)=>{ctx.beginPath();[[-r,-r],[r,-r],[r,r],[-r,r]].forEach((v,i)=>{const p=w(v[0],v[1]);i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]);});ctx.closePath();}},simplex:{name:'Simplex',label:'x ≥ 0, Σxᵢ ≤ r',lmo:(gx,gy,r)=>{const v=[{z:[0,0],v:0},{z:[r,0],v:gx*r},{z:[0,r],v:gy*r}];v.sort((a,b)=>a.v-b.v);return v[0].z;},contains:(x,y,r)=>x>=-1e-10&&y>=-1e-10&&x+y<=r+1e-10,project:(x,y,r)=>{let px=Math.max(0,x),py=Math.max(0,y);if(px+py<=r)return[px,py];const s=(px+py-r)/2;return[Math.max(0,px-s),Math.max(0,py-s)];},drawPath:(ctx,c,r,w)=>{ctx.beginPath();[[0,0],[r,0],[0,r]].forEach((v,i)=>{const p=w(v[0],v[1]);i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]);});ctx.closePath();}}};
+
+let currentFnIdx=0,mode='gd',strategy='fixed',pgdStrategy='fixed',mgcStrategy='standard',constraintType='l2';
+let startPt=[-3.5,2.8],path=[],fHist=[],alphaHist=[],gapHist=[],fwVertices=[],preProjectPts=[];
+let animFrame=null,animIdx=0,sgdComponents=null;
+const fn=()=>FUNCTIONS[currentFnIdx],fnP=()=>fn().getParams(parseFloat(document.getElementById('condSlider').value));
+const cst=()=>CONSTRAINTS[constraintType],getRadius=()=>parseFloat(document.getElementById('radiusSlider').value);
+const isConstrained=()=>mode==='mgc'||mode==='pgd';
+
+function buildSGDComponents(){const m=parseInt(document.getElementById('sampSlider').value),fo=fn();if(fo.id==='quadratic'||fo.id==='quadratic_rotated'){const p=fnP(),A=[],b=[];for(let i=0;i<m;i++){A.push([randn(),randn()]);b.push(randn()*0.01);}if(fo.id==='quadratic')for(let i=0;i<m;i++){A[i][0]*=Math.sqrt(p.L/m)*Math.sqrt(2);A[i][1]*=Math.sqrt(p.sig/m)*Math.sqrt(2);}else{const c=Math.cos(p.theta),s=Math.sin(p.theta);for(let i=0;i<m;i++){const r0=A[i][0],r1=A[i][1],s0=r0*Math.sqrt(p.L/m)*Math.sqrt(2),s1=r1*Math.sqrt(p.sig/m)*Math.sqrt(2);A[i][0]=c*s0-s*s1;A[i][1]=s*s0+c*s1;}}sgdComponents={A,b,m,type:'ls'};}else sgdComponents={m,type:'noisy'};}
+function stochGrad(x,y){const bs=parseInt(document.getElementById('batchSlider').value),co=sgdComponents;if(co.type==='ls'){const g=[0,0];for(let s=0;s<bs;s++){const i=Math.floor(Math.random()*co.m),ai=co.A[i],ri=ai[0]*x+ai[1]*y-co.b[i];g[0]+=ai[0]*ri;g[1]+=ai[1]*ri;}g[0]*=co.m/bs;g[1]*=co.m/bs;return g;}const tg=fn().grad(x,y,fnP()),ns=Math.max(0.5,Math.sqrt(tg[0]**2+tg[1]**2))/Math.sqrt(bs);return[tg[0]+randn()*ns,tg[1]+randn()*ns];}
+function randn(){return Math.sqrt(-2*Math.log(Math.random()+1e-30))*Math.cos(2*Math.PI*Math.random());}
+
+const cC=document.getElementById('contourCanvas'),cV=document.getElementById('convCanvas');
+const ctxC=cC.getContext('2d'),ctxV=cV.getContext('2d');
+function resizeCanvases(){for(const c of[cC,cV]){const r=c.parentElement.getBoundingClientRect(),h=r.height-28;c.width=r.width*devicePixelRatio;c.height=Math.max(h,100)*devicePixelRatio;c.style.width=r.width+'px';c.style.height=Math.max(h,100)+'px';}}
+function getView(){if(isConstrained()){const r=getRadius(),pad=Math.max(r*0.6,1.5);if(constraintType==='simplex')return{xmin:-pad*0.5,xmax:r+pad,ymin:-pad*0.5,ymax:r+pad};return{xmin:-r-pad,xmax:r+pad,ymin:-r-pad,ymax:r+pad};}return fn().view;}
+function worldToCanvas(wx,wy,canvas){const v=getView();return[(wx-v.xmin)/(v.xmax-v.xmin)*canvas.width,(1-(wy-v.ymin)/(v.ymax-v.ymin))*canvas.height];}
+function canvasToWorld(cx,cy,canvas){const rect=canvas.getBoundingClientRect(),v=getView();return[v.xmin+(cx-rect.left)/rect.width*(v.xmax-v.xmin),v.ymax-(cy-rect.top)/rect.height*(v.ymax-v.ymin)];}
+
+function drawContours(ctx,canvas){const w=canvas.width,h=canvas.height,v=getView(),fo=fn(),p=fnP();ctx.clearRect(0,0,w,h);ctx.fillStyle='#0c0e13';ctx.fillRect(0,0,w,h);const res=2,cw=Math.ceil(w/res),ch=Math.ceil(h/res),imgData=ctx.createImageData(cw,ch),vals=new Float32Array(cw*ch);let mx=-Infinity,mn=Infinity;for(let py=0;py<ch;py++)for(let px=0;px<cw;px++){const wx=v.xmin+(px*res/w)*(v.xmax-v.xmin),wy=v.ymax-(py*res/h)*(v.ymax-v.ymin),val=fo.f(wx,wy,p);vals[py*cw+px]=val;if(isFinite(val)){mx=Math.max(mx,val);mn=Math.min(mn,val);}}const sh=-mn+1,lMin=Math.log(mn+sh),lMax=Math.log(mx+sh);for(let py=0;py<ch;py++)for(let px=0;px<cw;px++){const val=vals[py*cw+px],t=Math.max(0,Math.min(1,(Math.log(val+sh)-lMin)/(lMax-lMin+1e-10))),idx=(py*cw+px)*4;imgData.data[idx]=Math.floor(10+t*30);imgData.data[idx+1]=Math.floor(14+t*60);imgData.data[idx+2]=Math.floor(28+t*95);imgData.data[idx+3]=255;}const tmp=document.createElement('canvas');tmp.width=cw;tmp.height=ch;tmp.getContext('2d').putImageData(imgData,0,0);ctx.imageSmoothingEnabled=true;ctx.drawImage(tmp,0,0,w,h);const nL=20,levels=[];for(let i=0;i<nL;i++)levels.push(Math.exp(lMin+(i+1)/(nL+1)*(lMax-lMin))-sh);const gs=2,gcw=Math.floor((cw-1)/gs),gch=Math.floor((ch-1)/gs),gval=(gi,gj)=>vals[gj*gs*cw+gi*gs],lerp=(va,vb,l)=>(l-va)/(vb-va);ctx.strokeStyle='rgba(200,215,240,0.18)';ctx.lineWidth=devicePixelRatio;ctx.lineJoin='round';ctx.lineCap='round';for(const lev of levels){ctx.beginPath();for(let gj=0;gj<gch;gj++)for(let gi=0;gi<gcw;gi++){const v00=gval(gi,gj),v10=gval(gi+1,gj),v11=gval(gi+1,gj+1),v01=gval(gi,gj+1),c=(v00>=lev?8:0)|(v10>=lev?4:0)|(v11>=lev?2:0)|(v01>=lev?1:0);if(!c||c===15)continue;const x0=gi*gs*res,x1=(gi+1)*gs*res,y0=gj*gs*res,y1=(gj+1)*gs*res,tX=x0+lerp(v00,v10,lev)*(x1-x0),tY=y0,rX=x1,rY=y0+lerp(v10,v11,lev)*(y1-y0),bX=x0+lerp(v01,v11,lev)*(x1-x0),bY=y1,lX=x0,lY=y0+lerp(v00,v01,lev)*(y1-y0);switch(c){case 1:case 14:ctx.moveTo(lX,lY);ctx.lineTo(bX,bY);break;case 2:case 13:ctx.moveTo(bX,bY);ctx.lineTo(rX,rY);break;case 3:case 12:ctx.moveTo(lX,lY);ctx.lineTo(rX,rY);break;case 4:case 11:ctx.moveTo(tX,tY);ctx.lineTo(rX,rY);break;case 5:ctx.moveTo(lX,lY);ctx.lineTo(tX,tY);ctx.moveTo(bX,bY);ctx.lineTo(rX,rY);break;case 6:case 9:ctx.moveTo(tX,tY);ctx.lineTo(bX,bY);break;case 7:case 8:ctx.moveTo(lX,lY);ctx.lineTo(tX,tY);break;case 10:ctx.moveTo(tX,tY);ctx.lineTo(rX,rY);ctx.moveTo(lX,lY);ctx.lineTo(bX,bY);break;}}ctx.stroke();}if(isConstrained()){const r=getRadius(),w2c=(wx,wy)=>worldToCanvas(wx,wy,canvas);ctx.save();ctx.beginPath();cst().drawPath(ctx,canvas,r,w2c);ctx.fillStyle='rgba(192,132,252,0.06)';ctx.fill();ctx.strokeStyle='rgba(192,132,252,0.5)';ctx.lineWidth=2*devicePixelRatio;ctx.setLineDash([6*devicePixelRatio,4*devicePixelRatio]);ctx.stroke();ctx.setLineDash([]);ctx.restore();}ctx.strokeStyle='rgba(200,210,230,0.07)';ctx.lineWidth=1;let[ax0,ay0]=worldToCanvas(v.xmin,0,canvas),[ax1,ay1]=worldToCanvas(v.xmax,0,canvas);ctx.beginPath();ctx.moveTo(ax0,ay0);ctx.lineTo(ax1,ay1);ctx.stroke();let[bx0,by0]=worldToCanvas(0,v.ymin,canvas),[bx1,by1]=worldToCanvas(0,v.ymax,canvas);ctx.beginPath();ctx.moveTo(bx0,by0);ctx.lineTo(bx1,by1);ctx.stroke();ctx.fillStyle='#4a5070';ctx.font=`${10*devicePixelRatio}px JetBrains Mono`;ctx.textAlign='center';const tS=Math.max(1,Math.round((v.xmax-v.xmin)/6));for(let t=Math.ceil(v.xmin);t<=Math.floor(v.xmax);t+=tS){if(!t)continue;const[tx,ty]=worldToCanvas(t,0,canvas);ctx.fillText(t,tx,ty+13*devicePixelRatio);}for(let t=Math.ceil(v.ymin);t<=Math.floor(v.ymax);t+=tS){if(!t)continue;const[tx,ty]=worldToCanvas(0,t,canvas);ctx.fillText(t,tx-13*devicePixelRatio,ty+4*devicePixelRatio);}const xs=fo.xstar,[ox,oy]=worldToCanvas(xs[0],xs[1],canvas);if(ox>=0&&ox<=w&&oy>=0&&oy<=h){ctx.fillStyle='#ffd166';ctx.shadowColor='rgba(255,209,102,0.6)';ctx.shadowBlur=10*devicePixelRatio;ctx.beginPath();ctx.arc(ox,oy,4.5*devicePixelRatio,0,2*Math.PI);ctx.fill();ctx.shadowBlur=0;ctx.font=`${9*devicePixelRatio}px JetBrains Mono`;ctx.fillStyle='#ffd166';ctx.textAlign='left';ctx.fillText('x*',ox+7*devicePixelRatio,oy-5*devicePixelRatio);}}
+
+function drawPath(ctx,canvas,ps){if(ps.length<1)return;const clr=mode==='sgd'?'#ff6b6b':mode==='pgd'?'#61afff':'#00e5a0',glow=mode==='sgd'?'rgba(255,107,107,0.4)':mode==='pgd'?'rgba(97,175,255,0.4)':'rgba(0,229,160,0.4)';if(mode==='mgc'&&fwVertices.length>0){ctx.save();ctx.globalAlpha=0.25;ctx.strokeStyle='#c084fc';ctx.lineWidth=devicePixelRatio;ctx.setLineDash([3*devicePixelRatio,3*devicePixelRatio]);for(let i=0;i<Math.min(ps.length-1,fwVertices.length);i++){const[px,py]=worldToCanvas(ps[i][0],ps[i][1],canvas),[vx,vy]=worldToCanvas(fwVertices[i][0],fwVertices[i][1],canvas);ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(vx,vy);ctx.stroke();}ctx.setLineDash([]);ctx.restore();}if(mode==='pgd'&&preProjectPts.length>0){ctx.save();ctx.globalAlpha=0.3;ctx.strokeStyle='#61afff';ctx.lineWidth=devicePixelRatio;ctx.setLineDash([3*devicePixelRatio,3*devicePixelRatio]);for(let i=0;i<Math.min(ps.length-1,preProjectPts.length);i++){const pre=preProjectPts[i];if(!pre)continue;const[px,py]=worldToCanvas(ps[i][0],ps[i][1],canvas),[gx,gy]=worldToCanvas(pre[0],pre[1],canvas),[nx,ny]=worldToCanvas(ps[i+1][0],ps[i+1][1],canvas);ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(gx,gy);ctx.stroke();ctx.beginPath();ctx.moveTo(gx,gy);ctx.lineTo(nx,ny);ctx.stroke();}ctx.setLineDash([]);ctx.restore();for(let i=0;i<Math.min(ps.length-1,preProjectPts.length);i++){const pre=preProjectPts[i];if(!pre)continue;const[gx,gy]=worldToCanvas(pre[0],pre[1],canvas);ctx.fillStyle='#61afff';ctx.globalAlpha=0.25;ctx.beginPath();ctx.arc(gx,gy,2.5*devicePixelRatio,0,2*Math.PI);ctx.fill();ctx.globalAlpha=1;}}ctx.strokeStyle=clr;ctx.lineWidth=1.3*devicePixelRatio;ctx.globalAlpha=0.7;ctx.beginPath();for(let i=0;i<ps.length;i++){const[px,py]=worldToCanvas(ps[i][0],ps[i][1],canvas);i?ctx.lineTo(px,py):ctx.moveTo(px,py);}ctx.stroke();ctx.globalAlpha=1;if(mode==='mgc'&&fwVertices.length>0)for(let i=0;i<Math.min(ps.length-1,fwVertices.length);i++){const[vx,vy]=worldToCanvas(fwVertices[i][0],fwVertices[i][1],canvas);ctx.fillStyle='#c084fc';ctx.globalAlpha=0.5;ctx.beginPath();ctx.arc(vx,vy,2*devicePixelRatio,0,2*Math.PI);ctx.fill();ctx.globalAlpha=1;}for(let i=0;i<ps.length;i++){const[px,py]=worldToCanvas(ps[i][0],ps[i][1],canvas),isF=i===0,isL=i===ps.length-1;ctx.fillStyle=isF?'#ff6b6b':clr;ctx.shadowColor=isF?'rgba(255,107,107,0.5)':glow;ctx.shadowBlur=(isF||isL)?7*devicePixelRatio:0;ctx.beginPath();ctx.arc(px,py,(isF||isL?3.5:1.5)*devicePixelRatio,0,2*Math.PI);ctx.fill();ctx.shadowBlur=0;}}
+
+function drawConvergence(ctx,canvas,fHS){const w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='#0c0e13';ctx.fillRect(0,0,w,h);if(fHS.length<2){ctx.fillStyle='#6b7394';ctx.font=`${11*devicePixelRatio}px JetBrains Mono`;ctx.textAlign='center';ctx.fillText('Run to see convergence',w/2,h/2);return;}const fo=fn(),p=fnP();let fS;if(isConstrained()){const r=getRadius(),xs=fo.xstar;if(cst().contains(xs[0],xs[1],r))fS=fo.f(xs[0],xs[1],p);else{const[px,py]=cst().project(xs[0],xs[1],r);fS=fo.f(px,py,p);fS=Math.min(fS,...fHS);}}else fS=fo.f(fo.xstar[0],fo.xstar[1],p);const gaps=fHS.map(v=>Math.max(v-fS,1e-18)),logG=gaps.map(v=>Math.log10(v)),sDG=mode==='mgc'&&gapHist.length>0,gS=sDG?gapHist.slice(0,fHS.length):[],lDG=gS.map(v=>Math.log10(Math.max(v,1e-18)));const pd={l:52*devicePixelRatio,r:16*devicePixelRatio,t:16*devicePixelRatio,b:34*devicePixelRatio},pw=w-pd.l-pd.r,ph=h-pd.t-pd.b,aL=[...logG.filter(v=>isFinite(v)),...lDG.filter(v=>isFinite(v))];let yMn=aL.length>0?Math.floor(Math.min(...aL))-0.5:-10,yMx=aL.length>0?Math.ceil(Math.max(...aL))+0.5:5;if(yMx-yMn<2){yMn--;yMx++;}const xM=fHS.length-1;ctx.strokeStyle='rgba(200,210,230,0.06)';ctx.lineWidth=1;for(let yl=Math.ceil(yMn);yl<=Math.floor(yMx);yl++){const py=pd.t+(1-(yl-yMn)/(yMx-yMn))*ph;ctx.beginPath();ctx.moveTo(pd.l,py);ctx.lineTo(pd.l+pw,py);ctx.stroke();ctx.fillStyle='#6b7394';ctx.font=`${9*devicePixelRatio}px JetBrains Mono`;ctx.textAlign='right';ctx.fillText(`10^${yl}`,pd.l-5*devicePixelRatio,py+3*devicePixelRatio);}ctx.textAlign='center';const st=Math.max(1,Math.floor(xM/5));for(let i=0;i<=xM;i+=st){const px=pd.l+(i/Math.max(xM,1))*pw;ctx.fillText(i,px,h-10*devicePixelRatio);}ctx.fillText('iteration k',pd.l+pw/2,h-devicePixelRatio);const cClr=mode==='sgd'?'#ff6b6b':mode==='pgd'?'#61afff':'#00e5a0',cGlw=mode==='sgd'?'rgba(255,107,107,0.3)':mode==='pgd'?'rgba(97,175,255,0.3)':'rgba(0,229,160,0.3)';ctx.strokeStyle=cClr;ctx.lineWidth=2*devicePixelRatio;ctx.shadowColor=cGlw;ctx.shadowBlur=5*devicePixelRatio;ctx.beginPath();for(let i=0;i<logG.length;i++){if(!isFinite(logG[i]))continue;const px=pd.l+(i/Math.max(xM,1))*pw,py=pd.t+(1-(logG[i]-yMn)/(yMx-yMn))*ph,cp=Math.max(pd.t,Math.min(pd.t+ph,py));i?ctx.lineTo(px,cp):ctx.moveTo(px,cp);}ctx.stroke();ctx.shadowBlur=0;if(sDG){ctx.strokeStyle='#c084fc';ctx.lineWidth=1.5*devicePixelRatio;ctx.shadowColor='rgba(192,132,252,0.3)';ctx.shadowBlur=4*devicePixelRatio;ctx.setLineDash([4*devicePixelRatio,3*devicePixelRatio]);ctx.beginPath();for(let i=0;i<lDG.length;i++){if(!isFinite(lDG[i]))continue;const px=pd.l+(i/Math.max(xM,1))*pw,py=pd.t+(1-(lDG[i]-yMn)/(yMx-yMn))*ph,cp=Math.max(pd.t,Math.min(pd.t+ph,py));i?ctx.lineTo(px,cp):ctx.moveTo(px,cp);}ctx.stroke();ctx.setLineDash([]);ctx.shadowBlur=0;}ctx.save();ctx.translate(10*devicePixelRatio,pd.t+ph/2);ctx.rotate(-Math.PI/2);ctx.fillStyle='#6b7394';ctx.font=`${9*devicePixelRatio}px JetBrains Mono`;ctx.textAlign='center';ctx.fillText('log₁₀(f(xᵏ) − f*)',0,0);ctx.restore();ctx.font=`bold ${10*devicePixelRatio}px JetBrains Mono`;ctx.textAlign='right';ctx.fillStyle=cClr;ctx.fillText({gd:'GD',sgd:'SGD',pgd:'PGD',mgc:'FW'}[mode],w-pd.r,pd.t+12*devicePixelRatio);if(sDG){ctx.fillStyle='#c084fc';ctx.fillText('--- gap',w-pd.r,pd.t+24*devicePixelRatio);}}
+
+function exactLineSearch2D(x,y,gx,gy){let a=0,b=1;const phi=(1+Math.sqrt(5))/2,p=fnP(),fL=al=>fn().f(x-al*gx,y-al*gy,p);while(fL(b)<fL(a)&&b<100)b*=2;for(let i=0;i<50;i++){const x1=b-(b-a)/phi,x2=a+(b-a)/phi;fL(x1)<fL(x2)?b=x2:a=x1;}return(a+b)/2;}
+function backtrack(x,y,gx,gy){const c_a=parseFloat(document.getElementById('cSlider').value),rho_a=parseFloat(document.getElementById('rhoSlider').value);let alpha=1;const p=fnP(),fk=fn().f(x,y,p),gn2=gx*gx+gy*gy;for(let t=0;t<80;t++){if(fn().f(x-alpha*gx,y-alpha*gy,p)<=fk-c_a*alpha*gn2)return alpha;alpha*=rho_a;}return alpha;}
+function backtrackPGD(x,y,gx,gy){const c_a=parseFloat(document.getElementById('cSlider').value),rho_a=parseFloat(document.getElementById('rhoSlider').value),r=getRadius();let alpha=1;const p=fnP(),fk=fn().f(x,y,p),gn2=gx*gx+gy*gy;for(let t=0;t<80;t++){const[px,py]=cst().project(x-alpha*gx,y-alpha*gy,r);if(fn().f(px,py,p)<=fk-c_a*alpha*gn2)return alpha;alpha*=rho_a;}return alpha;}
+function lineSearchFW(x,y,sx,sy){const dx=sx-x,dy=sy-y,p=fnP(),fL=a=>fn().f(x+a*dx,y+a*dy,p);let a=0,b=1;const phi=(1+Math.sqrt(5))/2;for(let i=0;i<50;i++){const x1=b-(b-a)/phi,x2=a+(b-a)/phi;fL(x1)<fL(x2)?b=x2:a=x1;}return(a+b)/2;}
+
+function runOptimizer(){const maxIter=parseInt(document.getElementById('maxIterSlider').value),fo=fn(),p=fnP(),eps=1e-12;let x=startPt[0],y=startPt[1];if(isConstrained()){const r=getRadius();if(!cst().contains(x,y,r))[x,y]=cst().project(x,y,r);}path=[[x,y]];fHist=[fo.f(x,y,p)];alphaHist=[];gapHist=[];fwVertices=[];preProjectPts=[];if(mode==='sgd')buildSGDComponents();const decay=parseFloat(document.getElementById('decaySlider').value),bA=parseFloat(document.getElementById('alphaSlider').value),mA=parseFloat(document.getElementById('mgcAlphaSlider').value),pA=parseFloat(document.getElementById('pgdAlphaSlider').value);for(let k=0;k<maxIter;k++){let gx,gy,alpha;if(mode==='gd'){[gx,gy]=fo.grad(x,y,p);if(Math.sqrt(gx*gx+gy*gy)<eps)break;if(strategy==='fixed')alpha=bA;else if(strategy==='exact')alpha=exactLineSearch2D(x,y,gx,gy);else alpha=backtrack(x,y,gx,gy);x-=alpha*gx;y-=alpha*gy;}else if(mode==='sgd'){[gx,gy]=stochGrad(x,y);alpha=bA/(1+k/decay);x-=alpha*gx;y-=alpha*gy;}else if(mode==='pgd'){const r=getRadius();[gx,gy]=fo.grad(x,y,p);if(Math.sqrt(gx*gx+gy*gy)<eps)break;if(pgdStrategy==='fixed')alpha=pA;else if(pgdStrategy==='invL')alpha=1/p.L;else alpha=backtrackPGD(x,y,gx,gy);const tx=x-alpha*gx,ty=y-alpha*gy,[px,py]=cst().project(tx,ty,r);preProjectPts.push(Math.abs(tx-px)>1e-10||Math.abs(ty-py)>1e-10?[tx,ty]:null);x=px;y=py;}else{const r=getRadius();[gx,gy]=fo.grad(x,y,p);const[sx,sy]=cst().lmo(gx,gy,r);fwVertices.push([sx,sy]);const gap=gx*(x-sx)+gy*(y-sy);gapHist.push(gap);if(gap<eps)break;if(mgcStrategy==='standard')alpha=2/(k+2);else if(mgcStrategy==='fixed')alpha=mA;else alpha=lineSearchFW(x,y,sx,sy);x+=alpha*(sx-x);y+=alpha*(sy-y);}path.push([x,y]);fHist.push(fo.f(x,y,p));alphaHist.push(alpha);if(!isFinite(x)||!isFinite(y)||Math.abs(x)>1e6||Math.abs(y)>1e6)break;}}
+
+function animate(){if(animIdx>=path.length){updateStats(path.length-1);return;}animIdx=Math.min(animIdx+Math.max(1,Math.floor(path.length/100)),path.length);drawContours(ctxC,cC);drawPath(ctxC,cC,path.slice(0,animIdx));drawConvergence(ctxV,cV,fHist.slice(0,animIdx));updateStats(animIdx-1);animFrame=requestAnimationFrame(animate);}
+function updateStats(idx){if(idx<0)idx=0;const p=fnP();document.getElementById('statIter').textContent=idx;document.getElementById('statF').textContent=fHist[idx]!==undefined?fHist[idx].toExponential(4):'—';if(path[idx]){const g=fn().grad(path[idx][0],path[idx][1],p);document.getElementById('statGrad').textContent=Math.sqrt(g[0]**2+g[1]**2).toExponential(3);}if(mode==='mgc')document.getElementById('statGap').textContent=gapHist[idx]!==undefined?gapHist[idx].toExponential(3):'—';document.getElementById('statAlpha').textContent=alphaHist[idx-1]!==undefined?alphaHist[idx-1].toFixed(6):'—';const last=path[Math.min(idx,path.length-1)];if(last&&(!isFinite(last[0])||!isFinite(last[1])||Math.abs(last[0])>1e5)){document.getElementById('statStatus').textContent='DIVERGED ✗';document.getElementById('statStatus').style.color='#ff6b6b';}else if(idx>=path.length-1&&path.length>1){if(mode==='mgc'){const gap=gapHist[gapHist.length-1]||Infinity;document.getElementById('statStatus').textContent=gap<1e-4?'Converged ✓':'Max iter reached';document.getElementById('statStatus').style.color=gap<1e-4?'#00e5a0':'#ffd166';}else{const g=fn().grad(last[0],last[1],p),gn=Math.sqrt(g[0]**2+g[1]**2);document.getElementById('statStatus').textContent=gn<1e-4?'Converged ✓':'Max iter reached';document.getElementById('statStatus').style.color=gn<1e-4?'#00e5a0':'#ffd166';}}else{document.getElementById('statStatus').textContent='Running…';document.getElementById('statStatus').style.color='#61afff';}}
+
+function updateFormulaBar(){const fo=fn(),p=fnP();document.getElementById('formulaDisplay').textContent=fo.expr;document.getElementById('propXstar').textContent=`(${fo.xstar[0]}, ${fo.xstar[1]})`;if(isConstrained()){document.getElementById('propLWrap').style.display='none';document.getElementById('propSigmaWrap').style.display='none';document.getElementById('propKappaWrap').style.display='none';document.getElementById('propQWrap').style.display='';document.getElementById('propRWrap').style.display='';document.getElementById('propQ').textContent=cst().label;document.getElementById('propR').textContent=getRadius().toFixed(1);}else{document.getElementById('propLWrap').style.display='';document.getElementById('propSigmaWrap').style.display='';document.getElementById('propKappaWrap').style.display='';document.getElementById('propQWrap').style.display='none';document.getElementById('propRWrap').style.display='none';document.getElementById('propL').textContent=p.L?p.L.toFixed(1):'?';document.getElementById('propSigma').textContent=fo.usesKappa?(p.sig||1).toFixed(2):'—';document.getElementById('propKappa').textContent=fo.usesKappa?parseInt(document.getElementById('condSlider').value):'—';}const info=fo.info;document.getElementById('infoBox').innerHTML=typeof info==='string'?info:(info[mode]||info.gd);}
+
+function updateModeUI(){const isGD=mode==='gd',isSGD=mode==='sgd',isPGD=mode==='pgd',isMGC=mode==='mgc',con=isConstrained();document.getElementById('strategyGroup').style.display=isGD?'':'none';document.getElementById('pgdStrategyGroup').style.display=isPGD?'':'none';document.getElementById('constraintGroup').style.display=con?'':'none';document.getElementById('mgcStrategyGroup').style.display=isMGC?'':'none';document.getElementById('sgdParams').style.display=isSGD?'':'none';document.getElementById('radiusRow').style.display=con?'':'none';const sA=(isGD&&strategy==='backtrack')||(isPGD&&pgdStrategy==='backtrack');document.getElementById('cRow').style.display=sA?'':'none';document.getElementById('rhoRow').style.display=sA?'':'none';document.getElementById('mgcAlphaRow').style.display=isMGC&&mgcStrategy==='fixed'?'':'none';document.getElementById('pgdAlphaRow').style.display=isPGD&&pgdStrategy==='fixed'?'':'none';if(isGD){document.getElementById('alphaRow').style.display=strategy==='fixed'?'':'none';document.querySelector('#alphaRow label').innerHTML=`Step size α <span id="alphaVal">${parseFloat(document.getElementById('alphaSlider').value).toFixed(4)}</span>`;}else if(isSGD){document.getElementById('alphaRow').style.display='';document.querySelector('#alphaRow label').innerHTML=`Initial step α₀ <span id="alphaVal">${parseFloat(document.getElementById('alphaSlider').value).toFixed(4)}</span>`;}else document.getElementById('alphaRow').style.display='none';document.getElementById('statGapRow').style.display=isMGC?'':'none';document.getElementById('contourLabel').textContent=con?'Contour Plot + Constraint Set Q + Iterates':'Contour Plot + Iterates';document.getElementById('convLabel').textContent=isMGC?'Convergence: f(xᵏ) − f* & Duality Gap':'Convergence: f(xᵏ) − f*';document.getElementById('clickHint').textContent=con?'Click inside Q to set x⁰':'Click to set x⁰';const leg=document.getElementById('legendArea');let h=`<div class="legend-item"><div class="legend-dot" style="background:${isPGD?'var(--accent3)':'var(--accent1)'}"></div> Iterates xᵏ</div><div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div> Starting x⁰</div>`;if(isPGD)h+=`<div class="legend-item"><div class="legend-dot" style="background:rgba(97,175,255,0.25)"></div> Ghost xᵏ − α∇f (pre-proj.)</div>`;if(isMGC)h+=`<div class="legend-item"><div class="legend-dot" style="background:var(--accent5)"></div> FW vertex φ_Q(xᵏ)</div>`;h+=`<div class="legend-item"><div class="legend-dot" style="background:var(--accent4)"></div> Optimum x*</div>`;if(con)h+=`<div class="legend-item"><div class="legend-dot" style="background:rgba(192,132,252,0.15);border:1px solid var(--accent5)"></div> Constraint set Q</div>`;leg.innerHTML=h;if(con){const r=getRadius();startPt=constraintType==='simplex'?[r*0.3,r*0.2]:[r*0.5,-r*0.3];}else{const v=fn().view;startPt=[v.xmin+(v.xmax-v.xmin)*0.2,v.ymin+(v.ymax-v.ymin)*0.75];}updateFormulaBar();resetVis();}
+
+function buildFnList(){const list=document.getElementById('fnList');list.innerHTML='';FUNCTIONS.forEach((f,i)=>{const c=document.createElement('button');c.className='fn-card'+(i===currentFnIdx?' active':'');c.innerHTML=`<div class="fn-name">${f.name}</div><div class="fn-expr">${f.expr}</div>`;c.addEventListener('click',()=>{currentFnIdx=i;document.querySelectorAll('.fn-card').forEach(x=>x.classList.remove('active'));c.classList.add('active');document.getElementById('condRow').style.display=f.usesKappa?'':'none';if(isConstrained()){const r=getRadius();startPt=constraintType==='simplex'?[r*0.3,r*0.2]:[r*0.5,-r*0.3];}else{const v=f.view;startPt=[v.xmin+(v.xmax-v.xmin)*0.2,v.ymin+(v.ymax-v.ymin)*0.75];}updateFormulaBar();resetVis();});list.appendChild(c);});}
+
+function resetVis(){if(animFrame)cancelAnimationFrame(animFrame);path=[];fHist=[];alphaHist=[];gapHist=[];fwVertices=[];preProjectPts=[];animIdx=0;drawContours(ctxC,cC);if(isConstrained()){const r=getRadius();if(!cst().contains(startPt[0],startPt[1],r))startPt=cst().project(startPt[0],startPt[1],r);}const[px,py]=worldToCanvas(startPt[0],startPt[1],cC);ctxC.fillStyle='#ff6b6b';ctxC.shadowColor='rgba(255,107,107,0.6)';ctxC.shadowBlur=10*devicePixelRatio;ctxC.beginPath();ctxC.arc(px,py,5*devicePixelRatio,0,2*Math.PI);ctxC.fill();ctxC.shadowBlur=0;drawConvergence(ctxV,cV,[]);['statIter','statF','statGrad','statGap','statAlpha'].forEach(id=>document.getElementById(id).textContent='—');document.getElementById('statStatus').textContent='Ready';document.getElementById('statStatus').style.color='';}
+
+document.querySelectorAll('#modeToggle .toggle-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('#modeToggle .toggle-btn').forEach(x=>x.classList.remove('active','active-sgd','active-pgd','active-mgc'));mode=b.dataset.mode;b.classList.add({gd:'active',sgd:'active-sgd',pgd:'active-pgd',mgc:'active-mgc'}[mode]);updateModeUI();});});
+document.querySelectorAll('#strategyGroup .strategy-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('#strategyGroup .strategy-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');strategy=b.dataset.s;updateModeUI();});});
+document.querySelectorAll('#pgdStepBtns .strategy-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('#pgdStepBtns .strategy-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');pgdStrategy=b.dataset.ps;updateModeUI();});});
+document.querySelectorAll('#constraintBtns .constraint-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('#constraintBtns .constraint-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');constraintType=b.dataset.q;const r=getRadius();startPt=constraintType==='simplex'?[r*0.3,r*0.2]:[r*0.5,-r*0.3];updateFormulaBar();resetVis();});});
+document.querySelectorAll('#mgcStepBtns .strategy-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('#mgcStepBtns .strategy-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');mgcStrategy=b.dataset.ms;document.getElementById('mgcAlphaRow').style.display=mgcStrategy==='fixed'?'':'none';});});
+document.getElementById('alphaSlider').addEventListener('input',e=>{document.getElementById('alphaVal').textContent=parseFloat(e.target.value).toFixed(4);});
+document.getElementById('cSlider').addEventListener('input',e=>{document.getElementById('cVal').textContent=parseFloat(e.target.value).toFixed(2);});
+document.getElementById('rhoSlider').addEventListener('input',e=>{document.getElementById('rhoVal').textContent=parseFloat(e.target.value).toFixed(2);});
+document.getElementById('maxIterSlider').addEventListener('input',e=>{document.getElementById('maxIterVal').textContent=e.target.value;});
+document.getElementById('condSlider').addEventListener('input',e=>{document.getElementById('condVal').textContent=e.target.value;updateFormulaBar();resetVis();});
+document.getElementById('batchSlider').addEventListener('input',e=>{document.getElementById('batchVal').textContent=e.target.value;});
+document.getElementById('decaySlider').addEventListener('input',e=>{document.getElementById('decayVal').textContent=e.target.value;});
+document.getElementById('sampSlider').addEventListener('input',e=>{document.getElementById('sampVal').textContent=e.target.value;});
+document.getElementById('radiusSlider').addEventListener('input',e=>{document.getElementById('radiusVal').textContent=parseFloat(e.target.value).toFixed(2);const r=parseFloat(e.target.value);startPt=constraintType==='simplex'?[r*0.3,r*0.2]:[r*0.5,-r*0.3];updateFormulaBar();resetVis();});
+document.getElementById('mgcAlphaSlider').addEventListener('input',e=>{document.getElementById('mgcAlphaVal').textContent=parseFloat(e.target.value).toFixed(2);});
+document.getElementById('pgdAlphaSlider').addEventListener('input',e=>{document.getElementById('pgdAlphaVal').textContent=parseFloat(e.target.value).toFixed(3);});
+document.getElementById('runBtn').addEventListener('click',()=>{if(animFrame)cancelAnimationFrame(animFrame);runOptimizer();animIdx=0;animate();});
+document.getElementById('stepBtn').addEventListener('click',()=>{if(!path.length){runOptimizer();animIdx=0;}if(animFrame)cancelAnimationFrame(animFrame);animIdx=Math.min(animIdx+1,path.length);drawContours(ctxC,cC);drawPath(ctxC,cC,path.slice(0,animIdx));drawConvergence(ctxV,cV,fHist.slice(0,animIdx));updateStats(animIdx-1);});
+document.getElementById('resetBtn').addEventListener('click',resetVis);
+cC.addEventListener('click',e=>{const[wx,wy]=canvasToWorld(e.clientX,e.clientY,cC);if(isConstrained()){if(cst().contains(wx,wy,getRadius())){startPt=[wx,wy];resetVis();}}else{const v=getView();if(wx>=v.xmin&&wx<=v.xmax&&wy>=v.ymin&&wy<=v.ymax){startPt=[wx,wy];resetVis();}}});
+window.addEventListener('resize',()=>{resizeCanvases();if(path.length>0){drawContours(ctxC,cC);drawPath(ctxC,cC,path.slice(0,animIdx));drawConvergence(ctxV,cV,fHist.slice(0,animIdx));}else{drawContours(ctxC,cC);drawConvergence(ctxV,cV,[]);}});
+buildFnList();resizeCanvases();updateFormulaBar();updateModeUI();resetVis();
 </script>
 </body>
 </html>
